@@ -3,7 +3,7 @@ import {
   TileLayer
 } from 'react-leaflet'
 import Path from '../components/Path'
-import Speed from '../components/Speed'
+import Stats from './Stats'
 import MapProvider from '../utils/MapContext'
 
 import './assets/index.css'
@@ -12,12 +12,12 @@ function Map() {
 
   return (
     <MapProvider>
-      <MapContainer center={[0, 0]} zoom={18}>
+      <MapContainer center={[0, 0]} zoom={18} zoomControl={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Speed />
+        <Stats />
         <Path />
       </MapContainer>
     </MapProvider>

@@ -3,28 +3,14 @@ import { useMapContext } from "../utils/MapContext"
 const Speed = () => {
 
     const { mapState } = useMapContext()
+    const { unitSchema } = mapState
     const { speed } = mapState.path.current
 
-    return (
-        <>
-            <span
-                style={{
-                    backgroundColor: 'black',
-                    color: '#2cff0f',
-                    padding: '1rem',
-                    position: 'fixed',
-                    zIndex: 1000,
-                    top: '.5rem',
-                    right: '.5rem',
-                    width: 'auto',
-                    height: 'auto',
-                    maxWidth: '50%',
-                    borderBottomLeftRadius: '.5rem'
-                }}>
-                {speed && Math.round(speed)}{` mph`}
-            </span>
-        </>
-    )
+    return (<span>
+        {unitSchema === 'Metric' ?
+            <>{speed ? Math.round(speed) : 0} m/s</> :
+            <>{speed ? Math.round(2.23694 * speed) : 0} mph</>}
+    </span>)
 }
 
 export default Speed

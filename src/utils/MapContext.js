@@ -30,7 +30,9 @@ const MapProvider = (p) => {
                     }
                 }
             }
-        }
+        },
+        unitSchema: 'Metric',
+        timerOn: false
     })
 
     return <MapContext.Provider value={{

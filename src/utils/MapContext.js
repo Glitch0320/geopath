@@ -16,26 +16,12 @@ const MapProvider = (p) => {
                 heading: '',
                 timestamp: ''
             },
-            top_speed: {
-                speed: 0,
-                latlng: { lat: '', lng: '' },
-                timestamp: ''
-            },
-            max_alt: {
-                altitude: '',
-                latlng: { lat: '', lng: '' },
-                timestamp: ''
-            },
-            min_alt: {
-                altitude: '',
-                latlng: { lat: '', lng: '' },
-                timestamp: ''
-            },
+            features: [],
             distance: 0,
             time: 0,
         },
         theme: {
-            layer: <></>,
+            layer: '',
             geoStyle: {
                 style: function (feature) {
                     return {

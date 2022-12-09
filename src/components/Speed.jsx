@@ -21,7 +21,7 @@ const Speed = () => {
                     maxWidth: '50%',
                     borderBottomLeftRadius: '.5rem'
                 }}>
-                {speed}32 mph
+                {Math.round(2.23694 * speed) ` mph`}
             </span>
         </>
     )

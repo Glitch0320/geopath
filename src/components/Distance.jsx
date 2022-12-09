@@ -10,8 +10,12 @@ const Distance = () => {
 
     return (<span>
         {unitSchema === 'Metric' ?
-            <>{distance ? Math.round(distance) : 0} m</> :
-            <>{distance ? Math.round(2.23694 * distance) : 0} mi</>}
+            <>{distance < 1000 ? (
+                <>{Math.round(distance)} m</>
+            ) : (
+                <>{Math.round(distance) / 1000} km</>
+            )}</> :
+            <>{Math.round(2.23694 * distance)} mi</>}
     </span>)
 }
 

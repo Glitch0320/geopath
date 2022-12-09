@@ -8,8 +8,8 @@ const Speed = () => {
 
     return (<span>
         {unitSchema === 'Metric' ?
-            <>{speed ? Math.round(speed) : 0} m/s</> :
-            <>{speed ? Math.round(2.23694 * speed) : 0} mph</>}
+            <>{3.6 * Math.round(speed)} km/h</> :
+            <>{Math.round(2.23694 * speed)} mph</>}
     </span>)
 }
 

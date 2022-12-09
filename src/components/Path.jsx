@@ -2,140 +2,96 @@ import { useState } from "react"
 import {
     useMapEvents,
     GeoJSON,
-    Marker,
     Circle,
-    Popup
+    Marker
 } from "react-leaflet"
 import { useMapContext } from "../utils/MapContext"
 
 export const Path = () => {
 
     const [notStarted, setNotStarted] = useState(true)
+    const [circle, setCircle] = useState({
+        latlng: null,
+        radius: null
+    })
 
     const { mapState, setMapState } = useMapContext()
 
     const { path, theme } = mapState
-    const { current, features, distance } = path
+    const { current, coordinates, distance, time } = path
 
     const map = useMapEvents({
         locationfound(e) {
             setNotStarted(false)
-            map.setView(e.latlng, map.getZoom())
-            // First point found ? add
-            if (features.length === 0) {
+            if (e.accuracy > 15 && coordinates.length === 0) {
+                map.setView(e.latlng, map.getZoom())
+                setCircle({ latlng: e.latlng, radius: e.accuracy })
+                return
+            }
+            setCircle({
+                latlng: null,
+                radius: null
+            })
+            // First time found, add point
+            if (coordinates.length === 0) {
+                map.setView(e.latlng, map.getZoom())
                 setMapState({
                     ...mapState,
                     path: {
                         ...path,
+                        coordinates: [[e.longitude, e.latitude]],
                         current: {
                             latlng: e.latlng,
                             accuracy: e.accuracy,
                             altitude: e.altitude,
                             altitudeAccuracy: e.altitudeAccuracy,
-                            heading: e.heading,
                             speed: e.speed,
+                            heading: e.heading,
                             timestamp: e.timestamp
                         },
-                        features: [{
-                            "type": "Feature",
-                            "properties": {
-                                "timestamp": e.timestamp
-                            },
-                            "geometry": {
-                                "coordinates": [e.longitude, e.latitude],
-                                "type": "Point"
-                            }
-                        }]
+                        timerOn: true
                     }
                 })
             } else {
-                // Acc <= 15 ? start timer,
-                // new point > 12 m from last? add
-                if (current.accuracy > 15) {
-                    if (e.accuracy < current.accuracy) {
+                if (e.latlng.distanceTo(current.latlng) > 10) {
+                    if (coordinates.length === 1) {
+                        map.setView(e.latlng, map.getZoom())
                         setMapState({
                             ...mapState,
                             path: {
                                 ...path,
+                                coordinates: [...coordinates, [e.longitude, e.latitude]],
                                 current: {
                                     latlng: e.latlng,
                                     accuracy: e.accuracy,
                                     altitude: e.altitude,
                                     altitudeAccuracy: e.altitudeAccuracy,
-                                    heading: e.heading,
                                     speed: e.speed,
+                                    heading: e.heading,
                                     timestamp: e.timestamp
                                 },
-                                features: [{
-                                    "type": "Feature",
-                                    "properties": {
-                                        "timestamp": e.timestamp
-                                    },
-                                    "geometry": {
-                                        "coordinates": [e.longitude, e.latitude],
-                                        "type": "Point"
-                                    }
-                                }]
+                                distance: current.latlng.distanceTo(e.latlng)
                             }
                         })
-                    }
-                } else {
-                    setMapState({
-                        ...mapState,
-                        timerOn: true
-                    })
-                    if (e.latlng.distanceTo(current.latlng) > 12) {
-                        if (features.length === 1) {
-                            setMapState({
-                                ...mapState,
-                                path: {
-                                    ...path,
-                                    features: [...features, {
-                                        "type": "Feature",
-                                        "properties": {},
-                                        "geometry": {
-                                            "coordinates": [[current.latlng.lng, current.latlng.lat], [e.longitude, e.latitude]],
-                                            "type": "LineString"
-                                        }
-                                    }],
-                                    distance: e.latlng.distanceTo(current.latlng),
-                                    current: {
-                                        latlng: e.latlng,
-                                        accuracy: e.accuracy,
-                                        altitude: e.altitude,
-                                        altitudeAccuracy: e.altitudeAccuracy,
-                                        heading: e.heading,
-                                        speed: e.speed,
-                                        timestamp: e.timestamp
-                                    },
-                                }
-                            })
-                        } else {
-                            setMapState({
-                                ...mapState,
-                                path: {
-                                    ...path,
-                                    features: [...features, {
-                                        "type": "Feature",
-                                        "properties": {},
-                                        "geometry": {
-                                            "coordinates": [...current, [e.longitude, e.latitude]],
-                                            "type": "LineString"
-                                        }
-                                    }],
-                                    distance: distance + e.latlng.distanceTo(current.latlng),
-                                    current: {
-                                        latlng: e.latlng,
-                                        accuracy: e.accuracy,
-                                        altitude: e.altitude,
-                                        altitudeAccuracy: e.altitudeAccuracy,
-                                        heading: e.heading,
-                                        speed: e.speed,
-                                        timestamp: e.timestamp
-                                    },
-                                }
-                            })
-                        }
+                    } else {
+                        map.setView(e.latlng, map.getZoom())
+                        setMapState({
+                            ...mapState,
+                            path: {
+                                ...path,
+                                coordinates: [...coordinates, [e.longitude, e.latitude]],
+                                current: {
+                                    latlng: e.latlng,
+                                    accuracy: e.accuracy,
+                                    altitude: e.altitude,
+                                    altitudeAccuracy: e.altitudeAccuracy,
+                                    speed: e.speed,
+                                    heading: e.heading,
+                                    timestamp: e.timestamp
+                                },
+                                distance: distance + current.latlng.distanceTo(e.latlng)
+                            }
+                        })
                     }
                 }
             }
@@ -159,18 +115,24 @@ export const Path = () => {
                 }}>
                 <button onClick={e => map.locate({ watch: true, enableHighAccuracy: true })}>Start</button>
             </div>}
+            {circle.radius && <Circle center={circle.latlng} radius={circle.radius}
+            color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}
+            />}
             {current.timestamp &&
                 <>
-                    <Circle center={current.latlng} radius={current.accuracy}>
-                        <Popup>
-                            {current.accuracy}
-                        </Popup>
-                    </Circle>
+                    <Marker position={current.latlng} />
                     <GeoJSON
-                        style={theme}
+                        style={theme.geoStyle}
                         data={{
-                            "type": "FeatureCollection",
-                            "features": features
+                            "type": "Feature",
+                            "properties": {
+                                "distance": distance,
+                                "time": time
+                            },
+                            "geometry": {
+                                "coordinates": coordinates,
+                                "type": "LineString"
+                            }
                         }} />
                 </>
             }

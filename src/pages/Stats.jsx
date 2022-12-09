@@ -21,19 +21,21 @@ const Stats = () => {
                     position: 'fixed',
                     zIndex: 1000,
                     top: '1rem',
-                    right: '4rem',
+                    right: '0',
                     left: '0',
                     margin: 'auto',
                     width: 'auto',
                     height: 'auto',
-                    maxWidth: '50%',
-                    borderRadius: '.5rem'
+                    maxWidth: '70%',
+                    borderRadius: '.5rem',
+                    border: '.25rem solid #2cff0f'
                 }}>
                 <Speed />
                 <span>|</span>
                 <Distance />
+                <span>|</span>
+                <Time />
             </span>
-            {timerOn && <Time />}
         </>
     )
 }

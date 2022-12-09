@@ -16,20 +16,17 @@ const MapProvider = (p) => {
                 heading: '',
                 timestamp: ''
             },
-            features: [],
+            coordinates: [],
             distance: 0,
             time: 0,
         },
         theme: {
             layer: '',
-            geoStyle: {
-                style: function (feature) {
-                    return {
-                        color: feature.properties.color,
-                        weight: feature.properties.weight
-                    }
-                }
-            }
+            geoStyle: () => ({
+                color: '#2cff0f',
+                weight: 5,
+                fillOpacity: 1
+               })
         },
         unitSchema: 'Metric',
         timerOn: false

@@ -17,13 +17,12 @@ export const Path = () => {
     })
 
     const { mapState, setMapState } = useMapContext()
-
-    const { path, theme } = mapState
-    const { current, coordinates, distance, time } = path
+    const { coordinates, distance, time } = mapState
 
     const map = useMapEvents({
         locationfound(e) {
             console.log(e)
+            // remove start button
             if (notStarted) setNotStarted(false)
             // Cap accuracy at 15
             if (e.accuracy > 15) {
@@ -39,38 +38,37 @@ export const Path = () => {
                 radius: null
             })
             // First time found, add point
-            if (!coordinates.length) {
+            if (coordinates.length === 0) {
                 map.setView(e.latlng, map.getZoom())
                 setMapState({
                     ...mapState,
-                    path: {
-                        ...path,
-                        current: {
-                            latlng: e.latlng,
-                            speed: e.speed
-                        },
-                        coordinates: [[e.longitude, e.latitude]],
-                        timerOn: true
-                    }
+                    latlng: e.latlng,
+                    accuracy: e.accuracy,
+                    altitude: e.altitude,
+                    altitudeAccuracy: e.altitudeAccuracy,
+                    speed: e.speed,
+                    heading: e.heading,
+                    timestamp: e.timestamp,
+                    coordinates: [[e.longitude, e.latitude]],
+                    timerOn: true
                 })
             } else {
                 // Ensure new points over 15
-                if (e.latlng.distanceTo(current.latlng) > 15) {
+                if (e.latlng.distanceTo(mapState.latlng) > 15) {
                     const c = coordinates.map(c => c)
                     c.push([e.longitude, e.latitude])
-                    const d = distance + e.latlng.distanceTo(current.latlng)
+                    const d = distance + e.latlng.distanceTo(mapState.latlng)
                     setMapState({
                         ...mapState,
-                        path: {
-                            ...path,
-                            current: {
-                                latlng: e.latlng,
-                                speed: e.speed
-                            },
-                            coordinates: c,
-                            timerOn: true,
-                            distance: d
-                        }
+                        latlng: e.latlng,
+                        accuracy: e.accuracy,
+                        altitude: e.altitude,
+                        altitudeAccuracy: e.altitudeAccuracy,
+                        speed: e.speed,
+                        heading: e.heading,
+                        timestamp: e.timestamp,
+                        coordinates: c,
+                        distance: d
                     })
                 }
             }
@@ -98,11 +96,11 @@ export const Path = () => {
                 color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}>
                 <Popup>Focusing...</Popup>
             </Circle>}
-            {current.latlng.lng &&
+            {mapState.latlng &&
                 <>
-                    <Marker position={current.latlng} />
+                    <Marker position={mapState.latlng} />
                     <GeoJSON
-                        style={theme.geoStyle}
+                        style={mapState.geoStyle}
                         data={{
                             "type": "Feature",
                             "properties": {

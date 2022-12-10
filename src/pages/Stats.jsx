@@ -6,7 +6,7 @@ import { useMapContext } from "../utils/MapContext"
 const Stats = () => {
 
     const { mapState } = useMapContext()
-    const { timerOn } = mapState.path
+    const { timerOn } = mapState
 
     return (
         <>

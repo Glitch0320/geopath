@@ -3,8 +3,7 @@ import { useMapContext } from "../utils/MapContext"
 const Speed = () => {
 
     const { mapState } = useMapContext()
-    const { unitSchema } = mapState
-    const { speed } = mapState.path.current
+    const { unitSchema, speed } = mapState
 
     return (<span>
         {unitSchema === 'Metric' ?

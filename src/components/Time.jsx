@@ -4,8 +4,8 @@ import { useEffect } from "react"
 const Time = () => {
 
     const { mapState, setMapState } = useMapContext()
-    const { path } = mapState
-    const { time } = path
+    const { time } = mapState
+
     let t = 0
 
     useEffect(() => {
@@ -13,10 +13,7 @@ const Time = () => {
             const interval = setInterval(() => {
                 setMapState({
                     ...mapState,
-                    path: {
-                        ...path,
-                        time: t
-                    }
+                    time: t
                 })
                 t++
             }, 1000)

@@ -6,32 +6,24 @@ export const useMapContext = () => useContext(MapContext)
 
 const MapProvider = (p) => {
     const [mapState, setMapState] = useState({
-        path: {
-            current: {
-                latlng: { lat: '', lng: '' },
-                accuracy: '',
-                altitude: '',
-                altitudeAccuracy: '',
-                speed: '',
-                heading: '',
-                timestamp: ''
-            },
-            coordinates: [],
-            distance: 0,
-            time: 0,
-            timerOn: false
-        },
-        theme: {
-            layer: {
-                url: '',
-                attribution: ''
-            },
-            geoStyle: () => ({
-                color: '#2cff0f',
-                weight: 5,
-                fillOpacity: 1
-               })
-        },
+        latlng: '',
+        accuracy: '',
+        altitude: '',
+        altitudeAccuracy: '',
+        speed: '',
+        heading: '',
+        timestamp: '',
+        coordinates: [],
+        distance: 0,
+        time: 0,
+        timerOn: false,
+        url: '',
+        attribution: '',
+        geoStyle: () => ({
+            color: '#2cff0f',
+            weight: 5,
+            fillOpacity: 1
+        }),
         unitSchema: 'Metric'
     })
 

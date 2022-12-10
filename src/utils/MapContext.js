@@ -6,14 +6,13 @@ export const useMapContext = () => useContext(MapContext)
 
 const MapProvider = (p) => {
     const [mapState, setMapState] = useState({
-        latlng: '',
-        accuracy: '',
-        altitude: '',
-        altitudeAccuracy: '',
-        speed: '',
-        heading: '',
-        timestamp: '',
-        coordinates: [],
+        latlng: null,
+        accuracy: null,
+        altitude: null,
+        altitudeAccuracy: null,
+        speed: null,
+        heading: null,
+        timestamp: null,
         distance: 0,
         time: 0,
         timerOn: false,

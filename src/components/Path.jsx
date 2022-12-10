@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react"
+import { 
+    // useEffect, 
+    useState } from "react"
 import {
     useMapEvents,
     GeoJSON,
@@ -7,7 +9,7 @@ import {
     Popup
 } from "react-leaflet"
 import { useMapContext } from "../utils/MapContext"
-import { testEvents } from '../utils/testEvents'
+// import { testEvents } from '../utils/testEvents'
 
 export const Path = () => {
 
@@ -16,9 +18,10 @@ export const Path = () => {
         latlng: null,
         radius: null
     })
+    const [coordinates, setCoordinates] = useState([])
 
     const { mapState, setMapState } = useMapContext()
-    const { coordinates, distance, time } = mapState
+    const { distance, time } = mapState
 
     const map = useMapEvents({
         locationfound(e) {
@@ -52,16 +55,14 @@ export const Path = () => {
                     speed: e.speed,
                     heading: e.heading,
                     timestamp: e.timestamp,
-                    coordinates: [[e.longitude, e.latitude]],
                     timerOn: true
                 })
+                setCoordinates([[e.longitude, e.latitude]])
                 return
             } else {
                 // Ensure new points over 15
-                if (e.latlng.distanceTo(mapState.latlng) > 15) {
+                if (e.latlng.distanceTo(mapState.latlng)) {
                     map.setView(e.latlng, map.getZoom())
-                    const c = coordinates.map(c => c)
-                    c.push([e.longitude, e.latitude])
                     const d = distance + e.latlng.distanceTo(mapState.latlng)
                     setMapState({
                         ...mapState,
@@ -72,9 +73,9 @@ export const Path = () => {
                         speed: e.speed,
                         heading: e.heading,
                         timestamp: e.timestamp,
-                        coordinates: c,
                         distance: d
                     })
+                    setCoordinates([...coordinates, [e.longitude, e.latitude]])
                     return
                 }
             }
@@ -87,6 +88,7 @@ export const Path = () => {
 
     return (
         <>
+        {/* Start button */}
             {notStarted && <div
                 style={{
                     backgroundColor: 'black',
@@ -98,6 +100,7 @@ export const Path = () => {
                 }}>
                 <button onClick={e => map.locate({ watch: true, enableHighAccuracy: true })}>Start</button>
             </div>}
+            {/* Focusing */}
             {circle.radius && <Circle center={circle.latlng} radius={circle.radius}
                 color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}>
                 <Popup>Focusing...</Popup>

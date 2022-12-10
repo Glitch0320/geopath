@@ -9,15 +9,14 @@ const Time = () => {
     let t = 0
 
     useEffect(() => {
-            console.log(t)
-            const interval = setInterval(() => {
-                setMapState({
-                    ...mapState,
-                    time: t
-                })
-                t++
-            }, 1000)
-            return () => clearInterval(interval)
+        const interval = setInterval(() => {
+            setMapState({
+                ...mapState,
+                time: t
+            })
+            t++
+        }, 1000)
+        return () => clearInterval(interval)
     }, [])
 
     return (

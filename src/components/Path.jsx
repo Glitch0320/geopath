@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     useMapEvents,
     GeoJSON,
@@ -7,6 +7,7 @@ import {
     Popup
 } from "react-leaflet"
 import { useMapContext } from "../utils/MapContext"
+import { testEvents } from '../utils/testEvents'
 
 export const Path = () => {
 
@@ -23,10 +24,12 @@ export const Path = () => {
         locationfound(e) {
             console.log(e)
             // remove start button
-            if (notStarted) setNotStarted(false)
+            if (notStarted) {
+                setNotStarted(false)
+                map.setView(e.latlng, map.getZoom())
+            }
             // Cap accuracy at 15
             if (e.accuracy > 15) {
-                map.setView(e.latlng, map.getZoom())
                 setCircle({
                     latlng: e.latlng,
                     radius: e.accuracy
@@ -52,9 +55,11 @@ export const Path = () => {
                     coordinates: [[e.longitude, e.latitude]],
                     timerOn: true
                 })
+                return
             } else {
                 // Ensure new points over 15
                 if (e.latlng.distanceTo(mapState.latlng) > 15) {
+                    map.setView(e.latlng, map.getZoom())
                     const c = coordinates.map(c => c)
                     c.push([e.longitude, e.latitude])
                     const d = distance + e.latlng.distanceTo(mapState.latlng)
@@ -70,6 +75,7 @@ export const Path = () => {
                         coordinates: c,
                         distance: d
                     })
+                    return
                 }
             }
         },
@@ -98,8 +104,24 @@ export const Path = () => {
             </Circle>}
             {mapState.latlng &&
                 <>
-                    <Marker position={mapState.latlng} />
-                    <GeoJSON
+                    <Marker position={mapState.latlng}>
+                        <Popup>
+                            <div style={{
+                                overflow: 'scroll',
+                                width: '80%',
+                                height: 'auto'
+                            }}>
+                                {mapState.accuracy}<br />
+                                {mapState.altitude}<br />
+                                {mapState.altitudeAccuracy}<br />
+                                {mapState.speed}<br />
+                                {mapState.heading}<br />
+                                {mapState.timestamp}<br />
+                                {coordinates.length}
+                            </div>
+                        </Popup>
+                    </Marker>
+                    {coordinates.length >= 2 && <GeoJSON
                         style={mapState.geoStyle}
                         data={{
                             "type": "Feature",
@@ -111,7 +133,7 @@ export const Path = () => {
                                 "coordinates": coordinates,
                                 "type": "LineString"
                             }
-                        }} />
+                        }} />}
                 </>
             }
         </>

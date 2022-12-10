@@ -1,82 +1,77 @@
-import { 
+import {
     // useEffect, 
-    useState } from "react"
+    useState
+} from "react"
 import {
     useMapEvents,
     GeoJSON,
-    Circle,
     Marker,
+    Circle,
     Popup
 } from "react-leaflet"
+// import { icon } from 'leaflet'
 import { useMapContext } from "../utils/MapContext"
 // import { testEvents } from '../utils/testEvents'
 
-export const Path = () => {
+const Path = () => {
 
-    const [notStarted, setNotStarted] = useState(true)
-    const [circle, setCircle] = useState({
+    const { stats, setStats } = useMapContext()
+
+    const [path, setPath] = useState({
+        // Marker and circle
         latlng: null,
-        radius: null
+        accuracy: null,
+        coordinates: []
     })
-    const [coordinates, setCoordinates] = useState([])
-
-    const { mapState, setMapState } = useMapContext()
-    const { distance, time } = mapState
+    const { coordinates } = path
 
     const map = useMapEvents({
         locationfound(e) {
-            console.log(e)
-            // remove start button
-            if (notStarted) {
-                setNotStarted(false)
-                map.setView(e.latlng, map.getZoom())
-            }
-            // Cap accuracy at 15
-            if (e.accuracy > 15) {
-                setCircle({
+            // If accuracy > 12, show on map as circle
+            console.log(e.accuracy)
+            if (e.accuracy > 12) {
+                // show circle
+                setPath({
+                    ...path,
                     latlng: e.latlng,
-                    radius: e.accuracy
+                    accuracy: e.accuracy
                 })
-                return
-            }
-            setCircle({
-                latlng: null,
-                radius: null
-            })
-            // First time found, add point
-            if (coordinates.length === 0) {
-                map.setView(e.latlng, map.getZoom())
-                setMapState({
-                    ...mapState,
-                    latlng: e.latlng,
-                    accuracy: e.accuracy,
-                    altitude: e.altitude,
-                    altitudeAccuracy: e.altitudeAccuracy,
-                    speed: e.speed,
-                    heading: e.heading,
-                    timestamp: e.timestamp,
-                    timerOn: true
-                })
-                setCoordinates([[e.longitude, e.latitude]])
                 return
             } else {
-                // Ensure new points over 15
-                if (e.latlng.distanceTo(mapState.latlng)) {
-                    map.setView(e.latlng, map.getZoom())
-                    const d = distance + e.latlng.distanceTo(mapState.latlng)
-                    setMapState({
-                        ...mapState,
+                // First point ?
+                if (!coordinates.length) {
+                    // add point and start timer
+                    setPath({
+                        ...path,
                         latlng: e.latlng,
                         accuracy: e.accuracy,
-                        altitude: e.altitude,
-                        altitudeAccuracy: e.altitudeAccuracy,
+                        coordinates: [[e.longitude, e.latitude]]
+                    })
+                    setStats({
+                        ...stats,
                         speed: e.speed,
                         heading: e.heading,
-                        timestamp: e.timestamp,
-                        distance: d
+                        altitude: e.altitude,
+                        altitudeAccuracy: e.altitudeAccuracy,
+                        timerOn: true
                     })
-                    setCoordinates([...coordinates, [e.longitude, e.latitude]])
-                    return
+                } else {
+                    // If > 12 m from last point
+                    if (e.latlng.distanceTo(path.latlng) > 12) {
+                        setPath({
+                            ...path,
+                            latlng: e.latlng,
+                            accuracy: e.accuracy,
+                            coordinates: [...coordinates, [e.longitude, e.latitude]]
+                        })
+                        setStats({
+                            ...stats,
+                            speed: e.speed,
+                            heading: e.heading,
+                            altitude: e.altitude,
+                            altitudeAccuracy: e.altitudeAccuracy
+                        })
+                    }
                 }
             }
         },
@@ -88,57 +83,51 @@ export const Path = () => {
 
     return (
         <>
-        {/* Start button */}
-            {notStarted && <div
+            <button
                 style={{
-                    backgroundColor: 'black',
-                    color: '#2cff0f',
-                    padding: '1rem',
                     position: 'fixed',
                     zIndex: 1000,
-                    bottom: 0
-                }}>
-                <button onClick={e => map.locate({ watch: true, enableHighAccuracy: true })}>Start</button>
-            </div>}
-            {/* Focusing */}
-            {circle.radius && <Circle center={circle.latlng} radius={circle.radius}
-                color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}>
-                <Popup>Focusing...</Popup>
-            </Circle>}
-            {mapState.latlng &&
-                <>
-                    <Marker position={mapState.latlng}>
-                        <Popup>
-                            <div style={{
-                                overflow: 'scroll',
-                                width: '80%',
-                                height: 'auto'
-                            }}>
-                                {mapState.accuracy}<br />
-                                {mapState.altitude}<br />
-                                {mapState.altitudeAccuracy}<br />
-                                {mapState.speed}<br />
-                                {mapState.heading}<br />
-                                {mapState.timestamp}<br />
-                                {coordinates.length}
-                            </div>
-                        </Popup>
-                    </Marker>
-                    {coordinates.length >= 2 && <GeoJSON
-                        style={mapState.geoStyle}
-                        data={{
+                    bottom: '2rem',
+                    right: '2rem'
+                }}
+                onClick={e => map.locate({ setView: true, watch: true })}
+            >Start</button>
+            {/* Location Innacurate ? Show circle */}
+            {path.latlng && path.accuracy > 12 &&
+                <Circle
+                    center={path.latlng}
+                    radius={path.accuracy}>
+                    <Popup>Accuracy: {path.accuracy}</Popup>
+                </Circle>}
+            {/* Accurate Location ? Show marker */}
+            {path.latlng && path.accuracy < 12 &&
+                <Marker
+                    position={path.latlng}>
+                    <Popup>
+                        Altitude: {Math.round(stats.altitude)}<br />
+                        + or - {Math.round(stats.altitudeAccuracy)} meters.
+                    </Popup>
+                </Marker>}
+            {/* At least two points added ? Draw line */}
+            <GeoJSON
+                data={{
+                    "type": "FeatureCollection",
+                    "features": [
+                        {
                             "type": "Feature",
-                            "properties": {
-                                "distance": distance,
-                                "time": time
-                            },
+                            "properties": {},
                             "geometry": {
-                                "coordinates": coordinates,
+                                "coordinates": path.coordinates,
                                 "type": "LineString"
                             }
-                        }} />}
-                </>
-            }
+                        }
+                    ]
+                }}
+                style={() => ({
+                    color: '#2cff0f',
+                    weight: 3.2
+                })}
+            />
         </>
     )
 }

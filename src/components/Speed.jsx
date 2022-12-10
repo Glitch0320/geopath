@@ -2,8 +2,8 @@ import { useMapContext } from "../utils/MapContext"
 
 const Speed = () => {
 
-    const { mapState } = useMapContext()
-    const { unitSchema, speed } = mapState
+    const { stats } = useMapContext()
+    const { unitSchema, speed } = stats
 
     return (<span>
         {unitSchema === 'Metric' ?

@@ -5,29 +5,18 @@ const MapContext = createContext()
 export const useMapContext = () => useContext(MapContext)
 
 const MapProvider = (p) => {
-    const [mapState, setMapState] = useState({
-        latlng: null,
-        accuracy: null,
+    const [stats, setStats] = useState({
         altitude: null,
         altitudeAccuracy: null,
-        speed: null,
-        heading: null,
-        timestamp: null,
+        speed: 0,
+        heading: 0,
         distance: 0,
         time: 0,
-        timerOn: false,
-        url: '',
-        attribution: '',
-        geoStyle: () => ({
-            color: '#2cff0f',
-            weight: 5,
-            fillOpacity: 1
-        }),
-        unitSchema: 'Metric'
+        timerOn: false
     })
 
     return <MapContext.Provider value={{
-        mapState, setMapState
+        stats, setStats
     }} {...p} />
 }
 

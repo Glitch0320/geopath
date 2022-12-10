@@ -5,8 +5,8 @@ import { useMapContext } from "../utils/MapContext"
 
 const Stats = () => {
 
-    const { mapState } = useMapContext()
-    const { timerOn } = mapState
+    const { stats } = useMapContext()
+    const { timerOn } = stats
 
     return (
         <>

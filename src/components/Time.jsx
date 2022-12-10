@@ -4,24 +4,23 @@ import { useEffect } from "react"
 const Time = () => {
 
     const { mapState, setMapState } = useMapContext()
-    const { path, timerOn } = mapState
+    const { path } = mapState
     const { time } = path
-    let count = 0
+    let t = 0
 
     useEffect(() => {
-        if (timerOn) {
+            console.log(t)
             const interval = setInterval(() => {
                 setMapState({
                     ...mapState,
                     path: {
                         ...path,
-                        time: count
+                        time: t
                     }
                 })
-                count++
+                t++
             }, 1000)
             return () => clearInterval(interval)
-        }
     }, [])
 
     return (

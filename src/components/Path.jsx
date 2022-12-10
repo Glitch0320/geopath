@@ -3,7 +3,8 @@ import {
     useMapEvents,
     GeoJSON,
     Circle,
-    Marker
+    Marker,
+    Popup
 } from "react-leaflet"
 import { useMapContext } from "../utils/MapContext"
 
@@ -22,10 +23,15 @@ export const Path = () => {
 
     const map = useMapEvents({
         locationfound(e) {
-            setNotStarted(false)
-            if (e.accuracy > 15 && coordinates.length === 0) {
+            console.log(e)
+            if (notStarted) setNotStarted(false)
+            // Cap accuracy at 15
+            if (e.accuracy > 15) {
                 map.setView(e.latlng, map.getZoom())
-                setCircle({ latlng: e.latlng, radius: e.accuracy })
+                setCircle({
+                    latlng: e.latlng,
+                    radius: e.accuracy
+                })
                 return
             }
             setCircle({
@@ -33,66 +39,39 @@ export const Path = () => {
                 radius: null
             })
             // First time found, add point
-            if (coordinates.length === 0) {
+            if (!coordinates.length) {
                 map.setView(e.latlng, map.getZoom())
                 setMapState({
                     ...mapState,
                     path: {
                         ...path,
-                        coordinates: [[e.longitude, e.latitude]],
                         current: {
                             latlng: e.latlng,
-                            accuracy: e.accuracy,
-                            altitude: e.altitude,
-                            altitudeAccuracy: e.altitudeAccuracy,
-                            speed: e.speed,
-                            heading: e.heading,
-                            timestamp: e.timestamp
+                            speed: e.speed
                         },
+                        coordinates: [[e.longitude, e.latitude]],
                         timerOn: true
                     }
                 })
             } else {
-                if (e.latlng.distanceTo(current.latlng) > 10) {
-                    if (coordinates.length === 1) {
-                        map.setView(e.latlng, map.getZoom())
-                        setMapState({
-                            ...mapState,
-                            path: {
-                                ...path,
-                                coordinates: [...coordinates, [e.longitude, e.latitude]],
-                                current: {
-                                    latlng: e.latlng,
-                                    accuracy: e.accuracy,
-                                    altitude: e.altitude,
-                                    altitudeAccuracy: e.altitudeAccuracy,
-                                    speed: e.speed,
-                                    heading: e.heading,
-                                    timestamp: e.timestamp
-                                },
-                                distance: current.latlng.distanceTo(e.latlng)
-                            }
-                        })
-                    } else {
-                        map.setView(e.latlng, map.getZoom())
-                        setMapState({
-                            ...mapState,
-                            path: {
-                                ...path,
-                                coordinates: [...coordinates, [e.longitude, e.latitude]],
-                                current: {
-                                    latlng: e.latlng,
-                                    accuracy: e.accuracy,
-                                    altitude: e.altitude,
-                                    altitudeAccuracy: e.altitudeAccuracy,
-                                    speed: e.speed,
-                                    heading: e.heading,
-                                    timestamp: e.timestamp
-                                },
-                                distance: distance + current.latlng.distanceTo(e.latlng)
-                            }
-                        })
-                    }
+                // Ensure new points over 15
+                if (e.latlng.distanceTo(current.latlng) > 15) {
+                    const c = coordinates.map(c => c)
+                    c.push([e.longitude, e.latitude])
+                    const d = distance + e.latlng.distanceTo(current.latlng)
+                    setMapState({
+                        ...mapState,
+                        path: {
+                            ...path,
+                            current: {
+                                latlng: e.latlng,
+                                speed: e.speed
+                            },
+                            coordinates: c,
+                            timerOn: true,
+                            distance: d
+                        }
+                    })
                 }
             }
         },
@@ -116,9 +95,10 @@ export const Path = () => {
                 <button onClick={e => map.locate({ watch: true, enableHighAccuracy: true })}>Start</button>
             </div>}
             {circle.radius && <Circle center={circle.latlng} radius={circle.radius}
-            color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}
-            />}
-            {current.timestamp &&
+                color='#27E60E' fillColor="#0B4004" fillOpacity={0.32}>
+                <Popup>Focusing...</Popup>
+            </Circle>}
+            {current.latlng.lng &&
                 <>
                     <Marker position={current.latlng} />
                     <GeoJSON

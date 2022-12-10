@@ -19,17 +19,20 @@ const MapProvider = (p) => {
             coordinates: [],
             distance: 0,
             time: 0,
+            timerOn: false
         },
         theme: {
-            layer: '',
+            layer: {
+                url: '',
+                attribution: ''
+            },
             geoStyle: () => ({
                 color: '#2cff0f',
                 weight: 5,
                 fillOpacity: 1
                })
         },
-        unitSchema: 'Metric',
-        timerOn: false
+        unitSchema: 'Metric'
     })
 
     return <MapContext.Provider value={{

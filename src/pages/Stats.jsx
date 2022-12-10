@@ -6,11 +6,10 @@ import { useMapContext } from "../utils/MapContext"
 const Stats = () => {
 
     const { mapState } = useMapContext()
-    const { timerOn } = mapState
+    const { timerOn } = mapState.path
 
     return (
         <>
-            {/* DISTANCE AND SPEED */}
             <span
                 style={{
                     display: 'flex',
@@ -34,7 +33,7 @@ const Stats = () => {
                 <span>|</span>
                 <Distance />
                 <span>|</span>
-                <Time />
+                {timerOn ? <Time /> : '00:00'}
             </span>
         </>
     )

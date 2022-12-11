@@ -97,15 +97,16 @@ const Path = () => {
                             },
                             key: e.timestamp
                         })
+                        const speed = e.speed ? e.speed : 0
                         setStats({
                             ...stats,
-                            speed: e.speed,
+                            speed: speed,
                             heading: e.heading,
                             altitude: e.altitude,
                             altitudeAccuracy: e.altitudeAccuracy,
                             distance: stats.distance + e.latlng.distanceTo({
-                                lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
-                                lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
+                                lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 2][1],
+                                lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 2][0]
                             })
                         })
                     }
@@ -137,7 +138,7 @@ const Path = () => {
                 <Circle
                     center={path.latlng}
                     radius={path.accuracy}>
-                    <Popup>Accuracy: {path.accuracy}</Popup>
+                    <Popup>Focusing...</Popup>
                 </Circle>}
 
             {/* Accurate Location ? Show marker */}
@@ -145,7 +146,11 @@ const Path = () => {
                 <Marker
                     position={path.latlng}>
                     <Popup>
-                        {path.data.geometry.coordinates.length}
+                        {stats.speed} m/s <br />
+                        {stats.distance} m <br />
+                        {stats.heading} degrees <br />
+                        {stats.altitude} m <br />
+                        Within {stats.altitudeAccuracy} m
                     </Popup>
                 </Marker>}
 

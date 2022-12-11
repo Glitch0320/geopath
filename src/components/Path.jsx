@@ -59,7 +59,10 @@ const Path = () => {
                     })
                 } else {
                     // If > accuracy from last point
-                    if (e.latlng.distanceTo(path.coordinates[path.coordinates.length - 1].latlng) > 13) {
+                    if (e.latlng.distanceTo({
+                        lat: path.coordinates[path.coordinates.length - 1][1],
+                        lng: path.coordinates[path.coordinates.length - 1][0]
+                    }) > 13) {
                         map.setView(e.latlng, map.getZoom())
                         setPath({
                             ...path,
@@ -73,7 +76,10 @@ const Path = () => {
                             heading: e.heading,
                             altitude: e.altitude,
                             altitudeAccuracy: e.altitudeAccuracy,
-                            distance: stats.distance + e.latlng.distanceTo(path.coordinates[path.coordinates.length - 1].latlng)
+                            distance: stats.distance + e.latlng.distanceTo({
+                                lat: path.coordinates[path.coordinates.length - 1][1],
+                                lng: path.coordinates[path.coordinates.length - 1][0]
+                            })
                         })
                     }
                 }

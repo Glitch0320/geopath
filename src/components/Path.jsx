@@ -28,7 +28,8 @@ const Path = () => {
                 "coordinates": [],
                 "type": "LineString"
             }
-        }
+        },
+        key: null
     })
 
     const map = useMapEvents({
@@ -59,7 +60,8 @@ const Path = () => {
                                 "coordinates": [[e.longitude, e.latitude]],
                                 "type": "LineString"
                             }
-                        }
+                        },
+                        key: e.timestamp
                     })
                     // Update stats
                     const speed = e.speed ? e.speed : 0
@@ -92,7 +94,8 @@ const Path = () => {
                                     "coordinates": [...path.data.geometry.coordinates, [e.longitude, e.latitude]],
                                     "type": "LineString"
                                 }
-                            }
+                            },
+                            key: e.timestamp
                         })
                         setStats({
                             ...stats,
@@ -149,6 +152,7 @@ const Path = () => {
             {/* At least two points added ? Draw line */}
             {path.data.geometry.coordinates.length > 1 &&
                 <GeoJSON
+                    key={path.key}
                     data={path.data}
                     style={() => ({
                         color: '#2cff0f',

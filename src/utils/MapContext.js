@@ -12,7 +12,8 @@ const MapProvider = (p) => {
         heading: 0,
         distance: 0,
         time: 0,
-        timerOn: false
+        timerOn: false,
+        unitSchema: 'Metric'
     })
 
     return <MapContext.Provider value={{

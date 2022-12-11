@@ -10,9 +10,9 @@ const Distance = () => {
             <>{distance < 1000 ? (
                 <>{Math.round(distance)} m</>
             ) : (
-                <>{Math.round(distance / 1000)} km</>
+                <>{(distance / 1000).toFixed(2)} km</>
             )}</> :
-            <>{Math.round(2.23694 * distance)} mi</>}
+            <>{(2.23694 * distance).toFixed(2)} mi</>}
     </span>)
 }
 

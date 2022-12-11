@@ -21,7 +21,8 @@ const Path = () => {
         // Marker and circle
         latlng: null,
         accuracy: null,
-        coordinates: []
+        coordinates: [],
+        timestamp: null
     })
 
     const map = useMapEvents({
@@ -45,7 +46,8 @@ const Path = () => {
                         ...path,
                         latlng: e.latlng,
                         accuracy: e.accuracy,
-                        coordinates: [[e.longitude, e.latitude]]
+                        coordinates: [[e.longitude, e.latitude]],
+                        key: e.timestamp
                     })
                     // Update stats
                     const speed = e.speed ? e.speed : 0
@@ -59,16 +61,20 @@ const Path = () => {
                     })
                 } else {
                     // If > accuracy from last point
-                    if (e.latlng.distanceTo({
-                        lat: path.coordinates[path.coordinates.length - 1][1],
-                        lng: path.coordinates[path.coordinates.length - 1][0]
-                    }) > 13) {
+                    if (
+                        e.latlng.distanceTo({
+                            lat: path.coordinates[path.coordinates.length - 1][1],
+                            lng: path.coordinates[path.coordinates.length - 1][0]
+                        }) > 13
+                        // true
+                    ) {
                         map.setView(e.latlng, map.getZoom())
                         setPath({
                             ...path,
                             latlng: e.latlng,
                             accuracy: e.accuracy,
-                            coordinates: [...path.coordinates, [e.longitude, e.latitude]]
+                            coordinates: [...path.coordinates, [e.longitude, e.latitude]],
+                            key: e.timestamp
                         })
                         setStats({
                             ...stats,
@@ -118,26 +124,21 @@ const Path = () => {
                 <Marker
                     position={path.latlng}>
                     <Popup>
-                        Altitude: {Math.round(stats.altitude)}<br />
-                        + or - {Math.round(stats.altitudeAccuracy)} meters.
+                        {path.coordinates.length}
                     </Popup>
                 </Marker>}
 
             {/* At least two points added ? Draw line */}
             {path.coordinates.length > 1 &&
                 <GeoJSON
+                    key={path.timestamp}
                     data={{
-                        "type": "FeatureCollection",
-                        "features": [
-                            {
-                                "type": "Feature",
-                                "properties": {},
-                                "geometry": {
-                                    "coordinates": path.coordinates,
-                                    "type": "LineString"
-                                }
-                            }
-                        ]
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "coordinates": path.coordinates,
+                            "type": "LineString"
+                        }
                     }}
                     style={() => ({
                         color: '#2cff0f',

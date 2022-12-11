@@ -23,13 +23,11 @@ const Path = () => {
         accuracy: null,
         coordinates: []
     })
-    const { coordinates } = path
 
     const map = useMapEvents({
         locationfound(e) {
-            // If accuracy > 12, show on map as circle
-            console.log(e.accuracy)
-            if (e.accuracy > 12) {
+            // Cap accuracy at 13 m
+            if (e.accuracy > 13) {
                 // show circle
                 setPath({
                     ...path,
@@ -39,7 +37,7 @@ const Path = () => {
                 return
             } else {
                 // First point ?
-                if (!coordinates.length) {
+                if (!path.coordinates.length) {
                     // add point and start timer
                     setPath({
                         ...path,
@@ -47,22 +45,24 @@ const Path = () => {
                         accuracy: e.accuracy,
                         coordinates: [[e.longitude, e.latitude]]
                     })
+                    // Update stats
+                    const speed = e.speed ? e.speed : 0
                     setStats({
                         ...stats,
-                        speed: e.speed,
+                        speed: speed,
                         heading: e.heading,
                         altitude: e.altitude,
                         altitudeAccuracy: e.altitudeAccuracy,
                         timerOn: true
                     })
                 } else {
-                    // If > 12 m from last point
-                    if (e.latlng.distanceTo(path.latlng) > 12) {
+                    // If > accuracy from last point
+                    if (e.latlng.distanceTo(path.latlng) > 13) {
                         setPath({
                             ...path,
                             latlng: e.latlng,
                             accuracy: e.accuracy,
-                            coordinates: [...coordinates, [e.longitude, e.latitude]]
+                            coordinates: [...path.coordinates, [e.longitude, e.latitude]]
                         })
                         setStats({
                             ...stats,
@@ -83,24 +83,26 @@ const Path = () => {
 
     return (
         <>
-            <button
+        {/* Remove start button when found */}
+            {!path.latlng &&
+                <button
                 style={{
                     position: 'fixed',
-                    zIndex: 1000,
+                    zIndex: 500,
                     bottom: '2rem',
                     right: '2rem'
                 }}
-                onClick={e => map.locate({ setView: true, watch: true })}
-            >Start</button>
+                onClick={e => map.locate({ setView: true, watch: true, enableHighAccuracy: true })}
+            >Start</button>}
             {/* Location Innacurate ? Show circle */}
-            {path.latlng && path.accuracy > 12 &&
+            {path.latlng && path.accuracy > 13 &&
                 <Circle
                     center={path.latlng}
                     radius={path.accuracy}>
                     <Popup>Accuracy: {path.accuracy}</Popup>
                 </Circle>}
             {/* Accurate Location ? Show marker */}
-            {path.latlng && path.accuracy < 12 &&
+            {path.latlng && path.accuracy < 13 &&
                 <Marker
                     position={path.latlng}>
                     <Popup>
@@ -109,6 +111,7 @@ const Path = () => {
                     </Popup>
                 </Marker>}
             {/* At least two points added ? Draw line */}
+            {path.coordinates.length > 1 && 
             <GeoJSON
                 data={{
                     "type": "FeatureCollection",
@@ -127,7 +130,7 @@ const Path = () => {
                     color: '#2cff0f',
                     weight: 3.2
                 })}
-            />
+            />}
         </>
     )
 }

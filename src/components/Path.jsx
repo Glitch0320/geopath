@@ -26,8 +26,9 @@ const Path = () => {
 
     const map = useMapEvents({
         locationfound(e) {
-            // Cap accuracy at 13 m
-            if (e.accuracy > 13) {
+            // Cap accuracy at 15 m
+            if (e.accuracy > 15) {
+                map.setView(e.latlng, map.getZoom())
                 // show circle
                 setPath({
                     ...path,
@@ -38,6 +39,7 @@ const Path = () => {
             } else {
                 // First point ?
                 if (!path.coordinates.length) {
+                    map.setView(e.latlng, map.getZoom())
                     // add point and start timer
                     setPath({
                         ...path,
@@ -57,7 +59,8 @@ const Path = () => {
                     })
                 } else {
                     // If > accuracy from last point
-                    if (e.latlng.distanceTo(path.latlng) > 13) {
+                    if (e.latlng.distanceTo(path.coordinates[path.coordinates.length - 1].latlng) > 13) {
+                        map.setView(e.latlng, map.getZoom())
                         setPath({
                             ...path,
                             latlng: e.latlng,
@@ -69,7 +72,8 @@ const Path = () => {
                             speed: e.speed,
                             heading: e.heading,
                             altitude: e.altitude,
-                            altitudeAccuracy: e.altitudeAccuracy
+                            altitudeAccuracy: e.altitudeAccuracy,
+                            distance: stats.distance + e.latlng.distanceTo(path.coordinates[path.coordinates.length - 1].latlng)
                         })
                     }
                 }
@@ -83,26 +87,28 @@ const Path = () => {
 
     return (
         <>
-        {/* Remove start button when found */}
+            {/* Remove start button when found */}
             {!path.latlng &&
                 <button
-                style={{
-                    position: 'fixed',
-                    zIndex: 500,
-                    bottom: '2rem',
-                    right: '2rem'
-                }}
-                onClick={e => map.locate({ setView: true, watch: true, enableHighAccuracy: true })}
-            >Start</button>}
+                    style={{
+                        position: 'fixed',
+                        zIndex: 500,
+                        bottom: '2rem',
+                        right: '2rem'
+                    }}
+                    onClick={e => map.locate({ watch: true, enableHighAccuracy: true })}
+                >Start</button>}
+
             {/* Location Innacurate ? Show circle */}
-            {path.latlng && path.accuracy > 13 &&
+            {path.latlng && path.accuracy > 15 &&
                 <Circle
                     center={path.latlng}
                     radius={path.accuracy}>
                     <Popup>Accuracy: {path.accuracy}</Popup>
                 </Circle>}
+
             {/* Accurate Location ? Show marker */}
-            {path.latlng && path.accuracy < 13 &&
+            {path.latlng && path.accuracy < 15 &&
                 <Marker
                     position={path.latlng}>
                     <Popup>
@@ -110,27 +116,28 @@ const Path = () => {
                         + or - {Math.round(stats.altitudeAccuracy)} meters.
                     </Popup>
                 </Marker>}
+
             {/* At least two points added ? Draw line */}
-            {path.coordinates.length > 1 && 
-            <GeoJSON
-                data={{
-                    "type": "FeatureCollection",
-                    "features": [
-                        {
-                            "type": "Feature",
-                            "properties": {},
-                            "geometry": {
-                                "coordinates": path.coordinates,
-                                "type": "LineString"
+            {path.coordinates.length > 1 &&
+                <GeoJSON
+                    data={{
+                        "type": "FeatureCollection",
+                        "features": [
+                            {
+                                "type": "Feature",
+                                "properties": {},
+                                "geometry": {
+                                    "coordinates": path.coordinates,
+                                    "type": "LineString"
+                                }
                             }
-                        }
-                    ]
-                }}
-                style={() => ({
-                    color: '#2cff0f',
-                    weight: 3.2
-                })}
-            />}
+                        ]
+                    }}
+                    style={() => ({
+                        color: '#2cff0f',
+                        weight: 3.2
+                    })}
+                />}
         </>
     )
 }

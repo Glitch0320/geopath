@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/geopath/static/css/main.a035d2ae.css",
-    "main.js": "/geopath/static/js/main.d9c7e794.js",
+    "main.js": "/geopath/static/js/main.04c058fb.js",
     "static/js/787.a8419b57.chunk.js": "/geopath/static/js/787.a8419b57.chunk.js",
     "service-worker.js": "/geopath/service-worker.js",
     "index.html": "/geopath/index.html",
     "main.a035d2ae.css.map": "/geopath/static/css/main.a035d2ae.css.map",
-    "main.d9c7e794.js.map": "/geopath/static/js/main.d9c7e794.js.map",
+    "main.04c058fb.js.map": "/geopath/static/js/main.04c058fb.js.map",
     "787.a8419b57.chunk.js.map": "/geopath/static/js/787.a8419b57.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a035d2ae.css",
-    "static/js/main.d9c7e794.js"
+    "static/js/main.04c058fb.js"
   ]
 }

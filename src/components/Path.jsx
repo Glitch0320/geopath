@@ -27,7 +27,9 @@ const Path = () => {
         accuracy: null,
         data: {
             "type": "Feature",
-            "properties": {},
+            "properties": {
+                "distance": 0
+            },
             "geometry": {
                 "coordinates": [],
                 "type": "LineString"
@@ -127,6 +129,7 @@ const Path = () => {
 
                         // TEST---------------------------------------TEST
                         // const distance = stats.distance + Math.floor(Math.random() * (18 - 13) + 13)
+                        // console.log(stats.distance + distance)
                         // TEST---------------------------------------TEST
 
                         setStats({
@@ -168,7 +171,12 @@ const Path = () => {
                         bottom: '2rem',
                         right: '2rem'
                     }}
-                    onClick={e => map.locate({ watch: false, enableHighAccuracy: true })}
+                    onClick={e => map.locate({ watch: 
+                        false,
+                        // TEST---------------------------------------TEST
+                        // true,
+                        // TEST---------------------------------------TEST
+                        enableHighAccuracy: true })}
                 >Start</button>}
 
             {/* Location Innacurate ? Show circle */}

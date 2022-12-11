@@ -11,7 +11,6 @@ const MapProvider = (p) => {
         speed: 0,
         heading: 0,
         distance: 0,
-        time: 0,
         timerOn: false,
         unitSchema: 'Metric'
     })

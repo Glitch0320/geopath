@@ -1,18 +1,13 @@
-import { useMapContext } from "../utils/MapContext"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const Time = () => {
 
-    const { stats, setStats } = useMapContext()
-
+    const [time, setTime] = useState(null)
     let t = 0
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setStats({
-                ...stats,
-                time: t
-            })
+            setTime(t)
             t++
         }, 1000)
         return () => clearInterval(interval)
@@ -20,10 +15,10 @@ const Time = () => {
 
     return (
         <span>
-            {stats.time && stats.time < 3600 ?
-                new Date(stats.time * 1000).toISOString().slice(14, 19)
+            {time && time < 3600 ?
+                new Date(time * 1000).toISOString().slice(14, 19)
                 :
-                new Date(stats.time * 1000).toISOString().slice(11, 19)}
+                new Date(time * 1000).toISOString().slice(11, 19)}
         </span>
     )
 }

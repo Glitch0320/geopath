@@ -21,8 +21,14 @@ const Path = () => {
         // Marker and circle
         latlng: null,
         accuracy: null,
-        coordinates: [],
-        timestamp: null
+        data: {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "coordinates": [],
+                "type": "LineString"
+            }
+        }
     })
 
     const map = useMapEvents({
@@ -39,15 +45,21 @@ const Path = () => {
                 return
             } else {
                 // First point ?
-                if (!path.coordinates.length) {
+                if (!path.data.geometry.coordinates.length) {
                     map.setView(e.latlng, map.getZoom())
                     // add point and start timer
                     setPath({
                         ...path,
                         latlng: e.latlng,
                         accuracy: e.accuracy,
-                        coordinates: [[e.longitude, e.latitude]],
-                        key: e.timestamp
+                        data: {
+                            "type": "Feature",
+                            "properties": {},
+                            "geometry": {
+                                "coordinates": [[e.longitude, e.latitude]],
+                                "type": "LineString"
+                            }
+                        }
                     })
                     // Update stats
                     const speed = e.speed ? e.speed : 0
@@ -63,8 +75,8 @@ const Path = () => {
                     // If > accuracy from last point
                     if (
                         e.latlng.distanceTo({
-                            lat: path.coordinates[path.coordinates.length - 1][1],
-                            lng: path.coordinates[path.coordinates.length - 1][0]
+                            lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
+                            lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
                         }) > 13
                         // true
                     ) {
@@ -73,8 +85,14 @@ const Path = () => {
                             ...path,
                             latlng: e.latlng,
                             accuracy: e.accuracy,
-                            coordinates: [...path.coordinates, [e.longitude, e.latitude]],
-                            key: e.timestamp
+                            data: {
+                                "type": "Feature",
+                                "properties": {},
+                                "geometry": {
+                                    "coordinates": [...path.data.geometry.coordinates, [e.longitude, e.latitude]],
+                                    "type": "LineString"
+                                }
+                            }
                         })
                         setStats({
                             ...stats,
@@ -83,8 +101,8 @@ const Path = () => {
                             altitude: e.altitude,
                             altitudeAccuracy: e.altitudeAccuracy,
                             distance: stats.distance + e.latlng.distanceTo({
-                                lat: path.coordinates[path.coordinates.length - 1][1],
-                                lng: path.coordinates[path.coordinates.length - 1][0]
+                                lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
+                                lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
                             })
                         })
                     }
@@ -124,22 +142,14 @@ const Path = () => {
                 <Marker
                     position={path.latlng}>
                     <Popup>
-                        {path.coordinates.length}
+                        {path.data.geometry.coordinates.length}
                     </Popup>
                 </Marker>}
 
             {/* At least two points added ? Draw line */}
-            {path.coordinates.length > 1 &&
+            {path.data.geometry.coordinates.length > 1 &&
                 <GeoJSON
-                    key={path.timestamp}
-                    data={{
-                        "type": "Feature",
-                        "properties": {},
-                        "geometry": {
-                            "coordinates": path.coordinates,
-                            "type": "LineString"
-                        }
-                    }}
+                    data={path.data}
                     style={() => ({
                         color: '#2cff0f',
                         weight: 3.2

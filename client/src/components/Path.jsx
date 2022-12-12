@@ -1,6 +1,6 @@
 import {
     // TEST---------------------------------------TEST
-    // useRef, 
+    useRef,
     // TEST---------------------------------------TEST
     useState
 } from "react"
@@ -14,7 +14,7 @@ import {
 // import { icon } from 'leaflet'
 import { useMapContext } from "../utils/MapContext"
 // TEST---------------------------------------TEST
-// import { testEvents } from '../utils/testEvents'
+import { testEvents } from '../utils/testEvents'
 // TEST---------------------------------------TEST
 
 const Path = () => {
@@ -27,9 +27,7 @@ const Path = () => {
         accuracy: null,
         data: {
             "type": "Feature",
-            "properties": {
-                "distance": 0
-            },
+            "properties": {},
             "geometry": {
                 "coordinates": [],
                 "type": "LineString"
@@ -39,14 +37,15 @@ const Path = () => {
     })
 
     // TEST---------------------------------------TEST
-    // const i = useRef(0)
+    const i = useRef(0)
     // TEST---------------------------------------TEST
 
     const map = useMapEvents({
         locationfound(e) {
 
             // TEST---------------------------------------TEST
-            // e = testEvents[i.current]
+            e = testEvents[i.current]
+            if (!e) return
             // TEST---------------------------------------TEST
 
             // Cap accuracy at 15 m
@@ -83,30 +82,36 @@ const Path = () => {
                     setStats({
                         ...stats,
                         speed: speed,
-                        heading: e.heading,
-                        altitude: e.altitude,
-                        altitudeAccuracy: e.altitudeAccuracy,
                         timerOn: true
                     })
 
                     // TEST---------------------------------------TEST
-                    // i.current = i.current + 1
+                    i.current = i.current + 1
                     // TEST---------------------------------------TEST
 
                 } else {
                     // If > accuracy from last point
                     if (
-                        e.latlng.distanceTo({
-                                lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
-                                lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
-                            }) > 13
+                        // e.latlng.distanceTo({
+                        //         lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
+                        //         lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
+                        //     }) > 13
 
                         // TEST---------------------------------------TEST
-                        // true
+                        true
                         // TEST---------------------------------------TEST
 
                     ) {
                         map.setView(e.latlng, map.getZoom())
+                        // const distance = stats.distance + e.latlng.distanceTo({
+                        //     lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
+                        //     lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
+                        // })
+
+                        // TEST---------------------------------------TEST
+                        const distance = stats.distance + Math.floor(Math.random() * (18 - 13) + 13)
+                        // TEST---------------------------------------TEST
+
                         setPath({
                             ...path,
                             latlng: e.latlng,
@@ -122,27 +127,14 @@ const Path = () => {
                             key: e.timestamp
                         })
                         const speed = e.speed ? e.speed : 0
-                        const distance = stats.distance + e.latlng.distanceTo({
-                            lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 2][1],
-                            lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 2][0]
-                        })
-
-                        // TEST---------------------------------------TEST
-                        // const distance = stats.distance + Math.floor(Math.random() * (18 - 13) + 13)
-                        // console.log(stats.distance + distance)
-                        // TEST---------------------------------------TEST
-
                         setStats({
                             ...stats,
                             speed: speed,
-                            distance: distance,
-                            heading: e.heading,
-                            altitude: e.altitude,
-                            altitudeAccuracy: e.altitudeAccuracy
+                            distance: distance
                         })
 
                         // TEST---------------------------------------TEST
-                        // i.current = i.current + 1
+                        i.current = i.current + 1
                         // TEST---------------------------------------TEST
 
                     }
@@ -159,11 +151,11 @@ const Path = () => {
         <>
             {/* Remove start button when found */}
             {
-            !path.latlng
-            // TEST---------------------------------------TEST
-            // true
-            // TEST---------------------------------------TEST
-             &&
+                // !path.latlng
+                // TEST---------------------------------------TEST
+                true
+                // TEST---------------------------------------TEST
+                &&
                 <button
                     style={{
                         position: 'fixed',
@@ -171,12 +163,14 @@ const Path = () => {
                         bottom: '2rem',
                         right: '2rem'
                     }}
-                    onClick={e => map.locate({ watch: 
-                        false,
+                    onClick={e => map.locate({
+                        watch:
+                            // true,
+                            // TEST---------------------------------------TEST
+                            false,
                         // TEST---------------------------------------TEST
-                        // true,
-                        // TEST---------------------------------------TEST
-                        enableHighAccuracy: true })}
+                        enableHighAccuracy: true
+                    })}
                 >Start</button>}
 
             {/* Location Innacurate ? Show circle */}
@@ -189,16 +183,7 @@ const Path = () => {
 
             {/* Accurate Location ? Show marker */}
             {path.latlng && path.accuracy < 15 &&
-                <Marker
-                    position={path.latlng}>
-                    <Popup>
-                        {stats.speed} m/s <br />
-                        {stats.distance} m <br />
-                        {stats.heading} degrees <br />
-                        {stats.altitude} m <br />
-                        Within {stats.altitudeAccuracy} m
-                    </Popup>
-                </Marker>}
+                <Marker position={path.latlng} />}
 
             {/* At least two points added ? Draw line */}
             {path.data.geometry.coordinates.length > 1 &&

@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "homepage": "https://glitch0320.github.io/geopath",
+  "homepage": "https://geopathxyz.herokuapp.com/",
   "version": "0.1.0",
   "proxy": "http://localhost:3001",
   "private": true,

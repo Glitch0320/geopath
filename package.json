@@ -10,6 +10,9 @@
     "seed": "node server/seeds/seed.js",
     "build": "cd client && npm run build"
   },
+  "engines": {
+    "node": "16.17.1"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

@@ -20,12 +20,11 @@ const Stats = () => {
                     position: 'fixed',
                     zIndex: 1000,
                     top: '1rem',
-                    right: '0',
-                    left: '0',
+                    left: 0,
+                    right: 0,
                     margin: 'auto',
-                    width: 'auto',
+                    width: '90%',
                     height: 'auto',
-                    maxWidth: '70%',
                     borderRadius: '.5rem',
                     border: '.25rem solid #2cff0f'
                 }}>

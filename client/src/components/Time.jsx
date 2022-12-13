@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useMapContext } from "../utils/MapContext"
 
 const Time = () => {
 
-    const [time, setTime] = useState(null)
+    const {time, setTime} = useMapContext()
     let t = 0
 
     useEffect(() => {

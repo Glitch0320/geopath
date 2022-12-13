@@ -18,10 +18,29 @@ const createUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    const getByIdQuery = await User.findById(req.params.id)
-    res.status(200).json({ result: "success", payload: getByIdQuery })
+    const q = await User.findById(req.params.id)
+    res.status(200).json({
+      result: "success", payload: {
+        count: q.pathCount,
+        paths: q.savedPaths,
+        dist: q.totalDistance,
+        time: q.totalTime,
+        name: q.username
+      }
+    })
   } catch (err) {
     res.status(400).json({ result: "fail", message: 'No user found by that id' })
+  }
+}
+
+const savePath = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, {
+      $push: { savedPaths: req.body}
+    })
+    res.status(200)
+  } catch (err) {
+    res.status(400).json({ result: "fail", message: 'Unable to save path.' })
   }
 }
 
@@ -66,6 +85,7 @@ const lookupUserByToken = async (req, res) => {
 module.exports = {
   createUser,
   getUserById,
+  savePath,
   authenticateLogin,
   lookupUserByToken
 }

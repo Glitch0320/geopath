@@ -9,6 +9,7 @@ const testUser = {
       "type": "Feature",
       "properties": {
         "distance": 16093,
+        "date": '12/15/2022',
         "time": 3600,
         "top_speed": {
           "speed": 9,

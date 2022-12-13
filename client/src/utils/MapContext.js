@@ -11,9 +11,10 @@ const MapProvider = (p) => {
         timerOn: false,
         unitSchema: 'Metric'
     })
+    const [time, setTime] = useState(0)
 
     return <MapContext.Provider value={{
-        stats, setStats
+        stats, setStats, time, setTime
     }} {...p} />
 }
 

@@ -12,7 +12,7 @@ const Distance = () => {
             </>
         ) : (
             <>
-                {Math.round(distance * .000621371)} mi
+                {(distance * .000621371).toFixed(1)} mi
             </>
         )}
     </span>)

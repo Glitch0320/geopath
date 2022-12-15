@@ -1,6 +1,5 @@
 import cookie from 'js-cookie'
 import { useState } from 'react'
-import { Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 const Profile = () => {
@@ -26,7 +25,7 @@ const Profile = () => {
   getUser()
 
   return (
-    <Container
+    <div
       style={{
         height: '100vh',
         backgroundColor: '#090909',
@@ -67,7 +66,7 @@ const Profile = () => {
               </>
             ) : (
               <>
-                {Math.round(dist * .000621371)} mi
+                {(dist * .000621371).toFixed(1)} mi
               </>
             )} over {((s) => {
               let str = ''
@@ -105,46 +104,48 @@ const Profile = () => {
               marginBottom: '1rem'
             }}
           >Saved Paths</h2>
-          {paths.map((p, i) => {
-            const path = JSON.parse(p)
-            return <div key={i}
-              style={{
-                textAlign: 'center',
-                border: '.25rem solid #2cff0f',
-                borderRadius: '.5rem',
-                padding: '.5rem',
-                marginTop: '1.5rem'
-              }}
-            >
-              {
-                path.properties.distance < 1609.34 ? (
-                  <>
-                    {Math.round(path.properties.distance * 1.09361)} yds
-                  </>
-                ) : (
-                  <>
-                    {Math.round(path.properties.distance * .000621371)} mi
-                  </>
-                )
-              } on
-              {` ${path.properties.date}`} for
-              {((s) => {
-                let str = ''
-                const hrs = (new Date(s * 1000).toISOString().slice(11, 13))
-                const mns = (new Date(s * 1000).toISOString().slice(14, 16))
-                const sec = (new Date(s * 1000).toISOString().slice(17, 19))
-                if (parseInt(hrs) > 0) str = `${parseInt(hrs)} hours, `
-                if (parseInt(hrs) > 0 && parseInt(mns) === 0) str = `${parseInt(hrs)} hours, and `
-                if (parseInt(hrs) > 0 && parseInt(mns) === 0 && parseInt(sec) === 0) str = `${parseInt(hrs)} hours`
-                if (parseInt(mns) > 0) str += `${parseInt(mns)} minutes, and `
-                if (parseInt(sec) > 0) str += `${parseInt(sec)} seconds`
-                return str
-              })(path.properties.time)}
-            </div>
-          })}
+          <div>
+            {paths.map((p, i) => {
+              const path = JSON.parse(p)
+              return <div key={i}
+                style={{
+                  textAlign: 'center',
+                  border: '.25rem solid #2cff0f',
+                  borderRadius: '.5rem',
+                  padding: '.5rem',
+                  marginTop: '1.5rem'
+                }}
+              >
+                {
+                  path.properties.distance < 1609.34 ? (
+                    <>
+                      {Math.round(path.properties.distance * 1.09361)} yds
+                    </>
+                  ) : (
+                    <>
+                      {Math.round(path.properties.distance * .000621371)} mi
+                    </>
+                  )
+                } on
+                {` ${path.properties.date}`} for {` `}
+                {((s) => {
+                  let str = ''
+                  const hrs = (new Date(s * 1000).toISOString().slice(11, 13))
+                  const mns = (new Date(s * 1000).toISOString().slice(14, 16))
+                  const sec = (new Date(s * 1000).toISOString().slice(17, 19))
+                  if (parseInt(hrs) > 0) str = `${parseInt(hrs)} hours, `
+                  if (parseInt(hrs) > 0 && parseInt(mns) === 0) str = `${parseInt(hrs)} hours, and `
+                  if (parseInt(hrs) > 0 && parseInt(mns) === 0 && parseInt(sec) === 0) str = `${parseInt(hrs)} hours`
+                  if (parseInt(mns) > 0) str += `${parseInt(mns)} minutes, and `
+                  if (parseInt(sec) > 0) str += `${parseInt(sec)} seconds`
+                  return str
+                })(path.properties.time)}
+              </div>
+            })}
+          </div>
         </>
       )}
-    </Container >
+    </div >
   )
 }
 

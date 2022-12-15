@@ -34,6 +34,7 @@ const getUserById = async (req, res) => {
 }
 
 const savePath = async (req, res) => {
+  console.log(req.body)
   try {
     await User.findByIdAndUpdate(req.params.id, {
       $push: { savedPaths: JSON.stringify(req.body) },

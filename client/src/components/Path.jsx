@@ -11,8 +11,8 @@ import {
     Circle,
     Popup
 } from "react-leaflet"
-// import { icon } from 'leaflet'
 import { BsSaveFill } from 'react-icons/bs'
+import { CgProfile } from 'react-icons/cg'
 import { useMapContext } from "../utils/MapContext"
 import cookie from "js-cookie"
 // TEST---------------------------------------TEST
@@ -34,12 +34,7 @@ const Path = () => {
         accuracy: null,
         data: {
             "type": "Feature",
-            "properties": {
-                "distance": stats.distance,
-                "date": new Date().toISOString().slice(0, 10),
-                "time": time,
-                "top_speed": topSpeed
-            },
+            "properties": {},
             "geometry": {
                 "coordinates": [],
                 "type": "LineString"
@@ -49,6 +44,7 @@ const Path = () => {
     })
 
     const [show, setShow] = useState(false)
+    const [show2, setShow2] = useState(false)
 
     // TEST---------------------------------------TEST
     // const i = useRef(0)
@@ -136,9 +132,7 @@ const Path = () => {
                             accuracy: e.accuracy,
                             data: {
                                 "type": "Feature",
-                                "properties": {
-                                    ...path.data.properties
-                                },
+                                "properties": {},
                                 "geometry": {
                                     "coordinates": [...path.data.geometry.coordinates, [e.longitude, e.latitude]],
                                     "type": "LineString"
@@ -175,7 +169,14 @@ const Path = () => {
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(path)
+                body: JSON.stringify({
+                    ...path.data, properties: {
+                        "distance": stats.distance,
+                        "time": time,
+                        "date": new Date().toISOString().slice(0, 10),
+                        "top_speed": topSpeed
+                    }
+                })
             })
         if (res.ok) {
             window.location.href = '/profile'
@@ -233,6 +234,50 @@ const Path = () => {
                         onClick={e => setShow(true)}
                     />}</>
             }
+            {cookie.get('auth-token') && <CgProfile
+                style={{
+                    position: 'fixed',
+                    zIndex: 500,
+                    bottom: '1.5rem',
+                    right: '1.5rem',
+                    margin: 'auto',
+                    width: '3rem',
+                    height: 'auto',
+                    borderRadius: '.5rem',
+                    color: '#2cff0f'
+                }}
+                onClick={e => setShow2(true)}
+            />}
+            {show2 && <div
+                style={{
+                    position: 'fixed',
+                    zIndex: 500,
+                    top: 0,
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    margin: 'auto',
+                    height: '9rem',
+                    width: '80%',
+                    textAlign: 'center',
+                    padding: '2rem',
+                    border: '.25rem solid #2cff0f',
+                    borderRadius: '1rem',
+                    backgroundColor: 'black',
+                    color: '#2cff0f'
+                }}
+            >Stop drawing and go to profile ?<br />
+                <button
+                    style={{
+                        margin: '1rem 1rem 0 0',
+                        backgroundColor: '#3C29FF',
+                        color: 'whitesmoke',
+                        padding: '.5rem',
+                        border: '.25rem solid #2cff0f'
+                    }}
+                    onClick={() => window.location.href = '/profile'}
+                >Confirm</button>
+            </div>}
             {show && <div
                 style={{
                     position: 'fixed',

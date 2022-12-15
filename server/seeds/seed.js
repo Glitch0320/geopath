@@ -1,5 +1,5 @@
 const User = require("../models/User")
-const connection = require("../config/connection")
+const connection = require('../config/connection')
 
 const testUser = {
   _id: '63975f91ab6872f4a41cb2cd',

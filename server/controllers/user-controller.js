@@ -36,7 +36,8 @@ const getUserById = async (req, res) => {
 const savePath = async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.params.id, {
-      $push: { savedPaths: req.body}
+      $push: { savedPaths: req.body },
+      $inc: { pathCount: 1, totalDistance: req.body.properties.distance, totalTime: req.body.properties.time }
     })
     res.status(200)
   } catch (err) {
@@ -45,17 +46,14 @@ const savePath = async (req, res) => {
 }
 
 const authenticateLogin = async (req, res) => {
-  // First see if we have a user with the supplied email address 
   const foundUser = await User.findOne({ username: req.body.username })
   if (!foundUser) return res.status(401).json({ message: "Login failed." })
 
-  // Now compare the supplied password w/ the hashed password
   const isValid = await bcrypt.compare(req.body.password, foundUser.password)
   if (!isValid) return res.status(401).json({ message: "Login failed." })
 
-  // Create a token to represent the authenticated user
   const token = jwt.sign({ _id: foundUser._id }, process.env.JWT_SECRET)
-
+  console.log(token)
   res
     .status(200)
     .set({ "auth-token": token })

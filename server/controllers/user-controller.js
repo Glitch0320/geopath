@@ -39,7 +39,7 @@ const savePath = async (req, res) => {
       $push: { savedPaths: JSON.stringify(req.body) },
       $inc: { pathCount: 1, totalDistance: req.body.properties.distance, totalTime: req.body.properties.time }
     })
-    res.status(200)
+    res.status(200).json({message:'success'})
   } catch (err) {
     res.status(400).json({ result: "fail", message: 'Unable to save path.' })
   }

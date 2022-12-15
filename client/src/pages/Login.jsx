@@ -22,7 +22,6 @@ const Login = () => {
                 "Content-Type": "application/json"
             }
         })
-        console.log(query)
         const result = await query.json()
         if (result && !result.err && result.token) {
             cookie.set("auth-token", result.token, { expires: 3 })

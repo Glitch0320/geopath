@@ -14,8 +14,9 @@ const Signup = () => {
     const handleSignup = async e => {
         e.preventDefault()
 
-        if (formData.username.length < 8) return alert('Username must be at least 8 characters long')
+        if (formData.username.length < 3) return alert('Username must be at least 3 characters long')
         if (formData.password.length < 8) return alert('Password must be at least 8 characters long')
+        if (formData.password !== formData.confirm) return alert('Passwords must match')
 
         const query = await fetch("/api/user/", {
             method: "post",
@@ -90,7 +91,7 @@ const Signup = () => {
                         onChange={e => setFormData({
                             ...formData, [e.target.id]: e.target.value
                         })}
-                        value={formData.password}
+                        value={formData.confirm}
                         placeholder='confirm password...'
                         type='password' />
                 </Form.Group>

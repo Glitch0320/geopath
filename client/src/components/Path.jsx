@@ -22,19 +22,14 @@ import cookie from "js-cookie"
 const Path = () => {
 
     const { stats, setStats, time } = useMapContext()
-    const [topSpeed, setTopSpeed] = useState({
-        "speed": 0,
-        "timestamp": '',
-        "coordinates": []
-    })
 
+    const [topSpeed, setTopSpeed] = useState(0)
     const [path, setPath] = useState({
         // Marker and circle
         latlng: null,
         accuracy: null,
         data: {
             "type": "Feature",
-            "properties": {},
             "geometry": {
                 "coordinates": [],
                 "type": "LineString"
@@ -78,7 +73,6 @@ const Path = () => {
                         accuracy: e.accuracy,
                         data: {
                             "type": "Feature",
-                            "properties": {},
                             "geometry": {
                                 "coordinates": [[e.longitude, e.latitude]],
                                 "type": "LineString"
@@ -92,11 +86,6 @@ const Path = () => {
                         ...stats,
                         speed: speed,
                         timerOn: true
-                    })
-                    if (speed > topSpeed.speed) setTopSpeed({
-                        "speed": speed,
-                        "timestamp": e.timestamp,
-                        "coordinates": [e.longitude, e.latitude]
                     })
 
                     // TEST---------------------------------------TEST
@@ -132,7 +121,6 @@ const Path = () => {
                             accuracy: e.accuracy,
                             data: {
                                 "type": "Feature",
-                                "properties": {},
                                 "geometry": {
                                     "coordinates": [...path.data.geometry.coordinates, [e.longitude, e.latitude]],
                                     "type": "LineString"
@@ -141,6 +129,7 @@ const Path = () => {
                             key: e.timestamp
                         })
                         const speed = e.speed ? e.speed : 0
+                        if (speed > topSpeed) setTopSpeed(speed)
                         setStats({
                             ...stats,
                             speed: speed,
@@ -170,12 +159,10 @@ const Path = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    ...path.data, properties: {
-                        "distance": stats.distance,
-                        "time": time,
-                        "date": new Date().toISOString().slice(0, 10),
-                        "top_speed": topSpeed
-                    }
+                    "distance": stats.distance,
+                    "time": time,
+                    "date": new Date().toISOString().slice(0, 10),
+                    "top_speed": topSpeed
                 })
             })
         if (res.ok) {
@@ -190,8 +177,8 @@ const Path = () => {
             {/* Remove start button when found */}
             {
                 !path.latlng
-                    // TEST---------------------------------------TEST
-                    // true
+                // TEST---------------------------------------TEST
+                // true
                     // TEST---------------------------------------TEST
                     ?
                     <button
@@ -212,8 +199,8 @@ const Path = () => {
                             map.locate({
                                 watch:
                                     true,
-                                // TEST---------------------------------------TEST
-                                // false,
+                                    // TEST---------------------------------------TEST
+                                    // false,
                                 // TEST---------------------------------------TEST
                                 enableHighAccuracy: true
                             })
@@ -234,6 +221,7 @@ const Path = () => {
                         onClick={e => setShow(true)}
                     />}</>
             }
+            
             {cookie.get('auth-token') && <CgProfile
                 style={{
                     position: 'fixed',

@@ -34,13 +34,12 @@ const getUserById = async (req, res) => {
 }
 
 const savePath = async (req, res) => {
-  console.log(req.body)
   try {
     await User.findByIdAndUpdate(req.params.id, {
       $push: { savedPaths: JSON.stringify(req.body) },
-      $inc: { pathCount: 1, totalDistance: req.body.properties.distance, totalTime: req.body.properties.time }
+      $inc: { pathCount: 1, totalDistance: req.body.distance, totalTime: req.body.time }
     })
-    res.status(200).json({message:'success'})
+    res.status(200).json({ message: 'success' })
   } catch (err) {
     res.status(400).json({ result: "fail", message: 'Unable to save path.' })
   }

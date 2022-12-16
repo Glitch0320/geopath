@@ -22,7 +22,7 @@ const Profile = () => {
     const { payload } = await r.json()
     setUser(payload)
   }
-  getUser()
+  if (!user.name) getUser()
 
   return (
     <div
@@ -117,17 +117,17 @@ const Profile = () => {
                 }}
               >
                 {
-                  path.properties.distance < 1609.34 ? (
+                  path.distance < 1609.34 ? (
                     <>
-                      {Math.round(path.properties.distance * 1.09361)} yds
+                      {Math.round(path.distance * 1.09361)} yds
                     </>
                   ) : (
                     <>
-                      {Math.round(path.properties.distance * .000621371)} mi
+                      {Math.round(path.distance * .000621371)} mi
                     </>
                   )
                 } on
-                {` ${path.properties.date}`} for {` `}
+                {` ${path.date}`} for {` `}
                 {((s) => {
                   let str = ''
                   const hrs = (new Date(s * 1000).toISOString().slice(11, 13))
@@ -139,7 +139,7 @@ const Profile = () => {
                   if (parseInt(mns) > 0) str += `${parseInt(mns)} minutes, and `
                   if (parseInt(sec) > 0) str += `${parseInt(sec)} seconds`
                   return str
-                })(path.properties.time)}
+                })(path.time)} with a top speed of {Math.round(path.top_speed * 2.23694)} mph.
               </div>
             })}
           </div>

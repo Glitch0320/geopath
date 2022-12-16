@@ -13,8 +13,6 @@ const Login = () => {
     const handleLogin = async e => {
         e.preventDefault()
 
-        //TODO: validate
-
         const query = await fetch("/api/user/auth", {
             method: "post",
             body: JSON.stringify(formData),
@@ -26,6 +24,8 @@ const Login = () => {
         if (result && !result.err && result.token) {
             cookie.set("auth-token", result.token, { expires: 3 })
             window.location.href = '/profile'
+        } else {
+            return alert('Invalid username or password')
         }
     }
 

@@ -95,10 +95,12 @@ const Path = () => {
                 } else {
                     // If > accuracy from last point
                     if (
+                        // COMMENTONTEST-------------TEST
                         e.latlng.distanceTo({
                             lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
                             lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
                         }) > 13
+                        // COMMENTONTEST-------------TEST
 
                         // TEST---------------------------------------TEST
                         // true
@@ -106,10 +108,12 @@ const Path = () => {
 
                     ) {
                         map.setView(e.latlng, map.getZoom())
+                        // COMMENTONTEST-------------TEST
                         const distance = stats.distance + e.latlng.distanceTo({
                             lat: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][1],
                             lng: path.data.geometry.coordinates[path.data.geometry.coordinates.length - 1][0]
                         })
+                        // COMMENTONTEST-------------TEST
 
                         // TEST---------------------------------------TEST
                         // const distance = stats.distance + Math.floor(Math.random() * (18 - 13) + 13)
@@ -176,9 +180,12 @@ const Path = () => {
         <>
             {/* Remove start button when found */}
             {
+                // COMMENTONTEST-------------TEST
                 !path.latlng
-                // TEST---------------------------------------TEST
-                // true
+                    // COMMENTONTEST-------------TEST
+
+                    // TEST---------------------------------------TEST
+                    // true
                     // TEST---------------------------------------TEST
                     ?
                     <button
@@ -198,9 +205,12 @@ const Path = () => {
                         onClick={e => {
                             map.locate({
                                 watch:
+                                // COMMENTONTEST-------------TEST
                                     true,
-                                    // TEST---------------------------------------TEST
-                                    // false,
+                                // COMMENTONTEST-------------TEST
+
+                                // TEST---------------------------------------TEST
+                                // false,
                                 // TEST---------------------------------------TEST
                                 enableHighAccuracy: true
                             })

@@ -35,7 +35,7 @@ const Profile = () => {
     >
       {paths.length === 0 ? (
         <>
-          <h3 className='p-3'>It looks like you haven't drawn any paths yet.</h3>
+          <h3 className='p-3'>Hello {name}, it looks like you haven't drawn any paths yet.</h3>
           <Link to="/map">
             <button
               className='border border-light border-3'
@@ -52,6 +52,25 @@ const Profile = () => {
               Draw Path
             </button>
           </Link>
+          <br />
+          <button
+            className='border border-light border-3'
+            style={{
+              margin: '1rem auto',
+              width: '6rem',
+              height: '3rem',
+              backgroundColor: 'black',
+              borderRadius: '.5rem',
+              color: '#2cff0f',
+              padding: '.5rem'
+            }}
+            onClick={() => {
+              cookie.remove('auth-token')
+              window.location.href = '/'
+            }}
+            type="button">
+            Log Out
+          </button>
         </>
       ) : (
         <>
@@ -68,17 +87,26 @@ const Profile = () => {
               <>
                 {(dist * .000621371).toFixed(1)} mi
               </>
-            )} over {((s) => {
-              let str = ''
-              const hrs = (new Date(s * 1000).toISOString().slice(11, 13))
-              const mns = (new Date(s * 1000).toISOString().slice(14, 16))
-              const sec = (new Date(s * 1000).toISOString().slice(17, 19))
-              if (parseInt(hrs) > 0) str = `${parseInt(hrs)} hours, `
-              if (parseInt(hrs) > 0 && parseInt(mns) === 0) str = `${parseInt(hrs)} hours, and `
-              if (parseInt(hrs) > 0 && parseInt(mns) === 0 && parseInt(sec) === 0) str = `${parseInt(hrs)} hours`
-              if (parseInt(mns) > 0) str += `${parseInt(mns)} minutes, and `
-              if (parseInt(sec) > 0) str += `${parseInt(sec)} seconds`
-              return str
+            )} over {((seconds) => {
+              // THIS WAS WRITTEN BY CHATGPT!
+              // Calculate the number of hours, minutes, and seconds
+              let hours = Math.floor(seconds / 3600)
+              let minutes = Math.floor((seconds % 3600) / 60)
+              let secs = seconds % 60
+            
+              // Build the time string
+              let timeString = ""
+              if (hours > 0) {
+                timeString += hours + " hour" + (hours > 1 ? "s" : "") + ", "
+              }
+              if (minutes > 0) {
+                timeString += minutes + " minute" + (minutes > 1 ? "s" : "") + ", and "
+              }
+              if (secs > 0) {
+                timeString += secs + " second" + (secs > 1 ? "s" : "")
+              }
+            
+              return timeString
             })(time)}.
 
           </section>}
@@ -98,6 +126,25 @@ const Profile = () => {
               Draw Path
             </button>
           </Link>
+          <br />
+          <button
+            className='border border-light border-3'
+            style={{
+              margin: '1rem auto',
+              width: '6rem',
+              height: '3rem',
+              backgroundColor: 'black',
+              borderRadius: '.5rem',
+              color: '#2cff0f',
+              padding: '.5rem'
+            }}
+            onClick={() => {
+              cookie.remove('auth-token')
+              window.location.href = '/'
+            }}
+            type="button">
+            Log Out
+          </button>
           <h2 className='text-center p-3'
             style={{
               borderBottom: '.25rem solid #2cff0f',
@@ -128,18 +175,27 @@ const Profile = () => {
                   )
                 } on
                 {` ${path.date}`} for {` `}
-                {((s) => {
-                  let str = ''
-                  const hrs = (new Date(s * 1000).toISOString().slice(11, 13))
-                  const mns = (new Date(s * 1000).toISOString().slice(14, 16))
-                  const sec = (new Date(s * 1000).toISOString().slice(17, 19))
-                  if (parseInt(hrs) > 0) str = `${parseInt(hrs)} hours, `
-                  if (parseInt(hrs) > 0 && parseInt(mns) === 0) str = `${parseInt(hrs)} hours, and `
-                  if (parseInt(hrs) > 0 && parseInt(mns) === 0 && parseInt(sec) === 0) str = `${parseInt(hrs)} hours`
-                  if (parseInt(mns) > 0) str += `${parseInt(mns)} minutes, and `
-                  if (parseInt(sec) > 0) str += `${parseInt(sec)} seconds`
-                  return str
-                })(path.time)} with a top speed of {Math.round(path.top_speed * 2.23694)} mph.
+                {((seconds) => {
+              // THIS WAS WRITTEN BY CHATGPT!
+              // Calculate the number of hours, minutes, and seconds
+              let hours = Math.floor(seconds / 3600)
+              let minutes = Math.floor((seconds % 3600) / 60)
+              let secs = seconds % 60
+            
+              // Build the time string
+              let timeString = ""
+              if (hours > 0) {
+                timeString += hours + " hour" + (hours > 1 ? "s" : "") + ", "
+              }
+              if (minutes > 0) {
+                timeString += minutes + " minute" + (minutes > 1 ? "s" : "") + ", and "
+              }
+              if (secs > 0) {
+                timeString += secs + " second" + (secs > 1 ? "s" : "")
+              }
+            
+              return timeString
+            })(path.time)} with a top speed of {Math.round(path.top_speed * 2.23694)} mph.
               </div>
             })}
           </div>

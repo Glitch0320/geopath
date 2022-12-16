@@ -14,7 +14,8 @@ const Signup = () => {
     const handleSignup = async e => {
         e.preventDefault()
 
-        //TODO: validate
+        if (formData.username.length < 8) return alert('Username must be at least 8 characters long')
+        if (formData.password.length < 8) return alert('Password must be at least 8 characters long')
 
         const query = await fetch("/api/user/", {
             method: "post",
@@ -32,6 +33,8 @@ const Signup = () => {
         if (result && !result.err && result.message === 'success') {
             cookie.set("auth-token", result.token, { expires: 3 })
             window.location.href = '/profile'
+        } else {
+            alert('Username taken')
         }
     }
 

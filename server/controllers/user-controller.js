@@ -8,8 +8,9 @@ require("dotenv").config()
 
 const createUser = async (req, res) => {
   try {
-    //TODO: validate
-    const user = await User.create(req.body)
+    if (req.body.username.length < 8) throw new Error('username too short')
+    if (req.body.password.length < 8) throw new Error('password to short')
+    await User.create(req.body)
     res.status(200).json({ message: 'success' })
   } catch (err) {
     res.status(400).json({ message: err.message })

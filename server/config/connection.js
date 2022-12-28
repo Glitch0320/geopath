@@ -1,7 +1,8 @@
 const mongoose = require("mongoose")
-require('dotenv').config()
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
  
-mongoose.connect('mongodb+srv://glitch0320:M7cFYUbdhrCDnP1X@geopath.u5ab3hu.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

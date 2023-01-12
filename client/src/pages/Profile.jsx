@@ -197,7 +197,7 @@ const Profile = () => {
               return timeString
             })(path.time)} with a top speed of {Math.round(path.top_speed * 2.23694)} mph.
               </div>
-            })}
+            }).reverse()}
           </div>
         </>
       )}

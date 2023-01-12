@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-import { Container } from 'react-bootstrap'
 
 const Landing = () => {
 
     return (
-        <Container
+        <main
             style={{
                 height: '100vh',
                 backgroundColor: '#090909',
@@ -23,8 +22,8 @@ const Landing = () => {
                     padding: '1rem'
                 }}
             >
-                An app that tracks statistics while drawing your path on a map while walking, running, skating, or whatever you like! {`(Planes, trains, and automobiles experimental)`}<br /><br />
-                If you'd like to track your overall stats and have the option to save your paths, <br /><br />
+                An app that tracks statistics while drawing your path on a map while walking, running, skating, or whatever you like! {`(Planes, trains, and automobiles experimental)`}
+                If you'd like to track your overall stats and have the option to save your paths, 
             </section>
 
             <Link to="/login">
@@ -70,7 +69,7 @@ const Landing = () => {
             </Link>
             <p
                 style={{
-                    margin: '4rem 0 2rem 0'
+                    margin: '1rem 0 2rem 0'
                 }}
             >
                 Just want to check it out?
@@ -91,7 +90,7 @@ const Landing = () => {
                     Draw Path
                 </button>
             </Link>
-        </Container>
+        </main>
     )
 }
 

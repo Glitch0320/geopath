@@ -9,7 +9,9 @@ const testUser = {
         "distance": 16093,
         "date": '12/15/2022',
         "time": 3600,
-        "top_speed": 9
+        "top_speed": 9,
+        "max_alt": 372,
+        "min_alt": 360
         })
   ],
   pathCount: 1,

@@ -50,7 +50,7 @@ Tutorial video <a href='https://drive.google.com/file/d/1vKDBOWkIWkEuFcggkwsVZwn
 
 ## Credits
 
--Leaflet, Learning with Mapster, 
+<a href='https://leafletjs.com/'>Leaflet</a>, <a href='https://www.youtube.com/watch?v=6_w-Mb_78iY&list=PLm76kc4VPkn27kRYq-58COO5r5bQdrKyy'>Learning with Mapster</a>
 
 ## License
 

@@ -24,14 +24,43 @@ const Profile = () => {
   }
   if (!user.name) getUser()
 
+  const style = {
+    main: {
+      height: '100vh',
+      backgroundColor: '#090909',
+      color: '#2cff0f',
+      textAlign: 'center'
+    },
+    button: {
+      margin: 'auto',
+      width: '8rem',
+      height: '3rem',
+      backgroundColor: 'black',
+      borderRadius: '.5rem',
+      color: '#2cff0f',
+      padding: '.5rem'
+    },
+    button2: {
+      margin: '1rem auto',
+      width: '6rem',
+      height: '3rem',
+      backgroundColor: 'black',
+      borderRadius: '.5rem',
+      color: '#2cff0f',
+      padding: '.5rem'
+    },
+    path: {
+      textAlign: 'center',
+      border: '.25rem solid #2cff0f',
+      borderRadius: '.5rem',
+      padding: '.5rem',
+      margin: '1.5rem 1rem 0 1rem',
+    }
+  }
+
   return (
-    <div
-      style={{
-        height: '100vh',
-        backgroundColor: '#090909',
-        color: '#2cff0f',
-        textAlign: 'center'
-      }}
+    <main
+      style={style.main}
     >
       {user.name && <>
         {paths.length === 0 ? (
@@ -40,15 +69,7 @@ const Profile = () => {
             <Link to="/map">
               <button
                 className='border border-light border-3'
-                style={{
-                  margin: 'auto',
-                  width: '8rem',
-                  height: '3rem',
-                  backgroundColor: 'black',
-                  borderRadius: '.5rem',
-                  color: '#2cff0f',
-                  padding: '.5rem'
-                }}
+                style={style.button}
                 type="button">
                 Draw Path
               </button>
@@ -56,15 +77,7 @@ const Profile = () => {
             <br />
             <button
               className='border border-light border-3'
-              style={{
-                margin: '1rem auto',
-                width: '6rem',
-                height: '3rem',
-                backgroundColor: 'black',
-                borderRadius: '.5rem',
-                color: '#2cff0f',
-                padding: '.5rem'
-              }}
+              style={style.button2}
               onClick={() => {
                 cookie.remove('auth-token')
                 window.location.href = '/'
@@ -76,11 +89,9 @@ const Profile = () => {
         ) : (
           <>
             <section
-              style={{
-                padding: '1rem'
-              }}
+              className='p-3'
             >
-              Hello {name}, you have drawn {count} paths for a total of {dist < 1609.34 ? (
+              Hello {name}, you have drawn {count} path{paths.length > 1 ? 's': ''} for a total of {dist < 1609.34 ? (
                 <>
                   {Math.round(dist * 1.09361)} yds
                 </>
@@ -109,15 +120,7 @@ const Profile = () => {
             <Link to="/map">
               <button
                 className='border border-light border-3'
-                style={{
-                  margin: 'auto',
-                  width: '8rem',
-                  height: '3rem',
-                  backgroundColor: 'black',
-                  borderRadius: '.5rem',
-                  color: '#2cff0f',
-                  padding: '.5rem'
-                }}
+                style={style.button}
                 type="button">
                 Draw Path
               </button>
@@ -125,15 +128,7 @@ const Profile = () => {
             <br />
             <button
               className='border border-light border-3'
-              style={{
-                margin: '1rem auto',
-                width: '6rem',
-                height: '3rem',
-                backgroundColor: 'black',
-                borderRadius: '.5rem',
-                color: '#2cff0f',
-                padding: '.5rem'
-              }}
+              style={style.button2}
               onClick={() => {
                 cookie.remove('auth-token')
                 window.location.href = '/'
@@ -151,13 +146,7 @@ const Profile = () => {
               {paths.map((p, i) => {
                 const path = JSON.parse(p)
                 return <div key={i}
-                  style={{
-                    textAlign: 'center',
-                    border: '.25rem solid #2cff0f',
-                    borderRadius: '.5rem',
-                    padding: '.5rem',
-                    margin: '1.5rem 1rem 0 1rem'
-                  }}
+                  style={style.path}
                 >
                   {
                     path.distance < 1609.34 ? (
@@ -194,7 +183,7 @@ const Profile = () => {
           </>
         )}
       </>}
-    </div >
+    </main>
   )
 }
 

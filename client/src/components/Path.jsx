@@ -176,36 +176,117 @@ const Path = () => {
         }
     }
 
+    const style = {
+        start: {
+            position: 'fixed',
+            zIndex: 500,
+            top: '7rem',
+            left: 0,
+            right: 0,
+            margin: 'auto',
+            width: '4rem',
+            height: '2rem',
+            backgroundColor: 'black',
+            borderRadius: '.5rem',
+            color: '#2cff0f'
+        },
+        save: {
+            position: 'fixed',
+            zIndex: 500,
+            bottom: '1.5rem',
+            left: '1.5rem',
+            margin: 'auto',
+            width: '3rem',
+            height: 'auto',
+            borderRadius: '.5rem',
+            color: '#2cff0f'
+        },
+        profile: {
+            position: 'fixed',
+            zIndex: 500,
+            bottom: '1.5rem',
+            right: '1.5rem',
+            margin: 'auto',
+            width: '3rem',
+            height: 'auto',
+            borderRadius: '.5rem',
+            color: '#2cff0f'
+        },
+        profileModal: {
+            position: 'fixed',
+            zIndex: 500,
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            margin: 'auto',
+            height: '9rem',
+            width: '80%',
+            textAlign: 'center',
+            padding: '2rem',
+            border: '.25rem solid #2cff0f',
+            borderRadius: '1rem',
+            backgroundColor: 'black',
+            color: '#2cff0f'
+        },
+        profileConfirm: {
+            margin: '1rem 1rem 0 0',
+            backgroundColor: '#3C29FF',
+            color: 'whitesmoke',
+            padding: '.5rem',
+            border: '.25rem solid #2cff0f'
+        },
+        saveModal: {
+            position: 'fixed',
+            zIndex: 500,
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            margin: 'auto',
+            height: '9rem',
+            width: '80%',
+            textAlign: 'center',
+            padding: '2rem',
+            border: '.25rem solid #2cff0f',
+            borderRadius: '1rem',
+            backgroundColor: 'black',
+            color: '#2cff0f'
+        },
+        saveConfirm: {
+            margin: '1rem 1rem 0 0',
+            backgroundColor: '#3C29FF',
+            color: 'whitesmoke',
+            padding: '.5rem',
+            border: '.25rem solid #2cff0f'
+        },
+        saveCancel: {
+            margin: '1rem 0 0 1rem',
+            backgroundColor: '#3C29FF',
+            color: 'whitesmoke',
+            padding: '.5rem',
+            border: '.25rem solid #2cff0f'
+        }
+    }
+
     return (
         <>
             {/* Remove start button when found */}
             {
                 // COMMENTONTEST-------------TEST
                 !path.latlng
-                    // COMMENTONTEST-------------TEST
+                // COMMENTONTEST-------------TEST
 
-                    // TEST---------------------------------------TEST
-                    // true
-                    // TEST---------------------------------------TEST
+                // TEST---------------------------------------TEST
+                // true
+                // TEST---------------------------------------TEST
                     ?
                     <button
-                        style={{
-                            position: 'fixed',
-                            zIndex: 500,
-                            top: '7rem',
-                            left: 0,
-                            right: 0,
-                            margin: 'auto',
-                            width: '4rem',
-                            height: '2rem',
-                            backgroundColor: 'black',
-                            borderRadius: '.5rem',
-                            color: '#2cff0f'
-                        }}
+                        style={style.start}
                         onClick={e => {
                             map.locate({
                                 watch:
-                                // COMMENTONTEST-------------TEST
+                                    // COMMENTONTEST-------------TEST
                                     true,
                                 // COMMENTONTEST-------------TEST
 
@@ -217,103 +298,33 @@ const Path = () => {
                         }}
                     >Start</button> :
                     <>{cookie.get('auth-token') && path.data.geometry.coordinates.length > 1 && <BsSaveFill
-                        style={{
-                            position: 'fixed',
-                            zIndex: 500,
-                            bottom: '1.5rem',
-                            left: '1.5rem',
-                            margin: 'auto',
-                            width: '3rem',
-                            height: 'auto',
-                            borderRadius: '.5rem',
-                            color: '#2cff0f'
-                        }}
+                        style={style.save}
                         onClick={e => setShow(true)}
                     />}</>
             }
-            
+
             {cookie.get('auth-token') && <CgProfile
-                style={{
-                    position: 'fixed',
-                    zIndex: 500,
-                    bottom: '1.5rem',
-                    right: '1.5rem',
-                    margin: 'auto',
-                    width: '3rem',
-                    height: 'auto',
-                    borderRadius: '.5rem',
-                    color: '#2cff0f'
-                }}
+                style={style.profile}
                 onClick={e => setShow2(true)}
             />}
             {show2 && <div
-                style={{
-                    position: 'fixed',
-                    zIndex: 500,
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    margin: 'auto',
-                    height: '9rem',
-                    width: '80%',
-                    textAlign: 'center',
-                    padding: '2rem',
-                    border: '.25rem solid #2cff0f',
-                    borderRadius: '1rem',
-                    backgroundColor: 'black',
-                    color: '#2cff0f'
-                }}
+                style={style.profileModal}
             >Stop drawing and go to profile ?<br />
                 <button
-                    style={{
-                        margin: '1rem 1rem 0 0',
-                        backgroundColor: '#3C29FF',
-                        color: 'whitesmoke',
-                        padding: '.5rem',
-                        border: '.25rem solid #2cff0f'
-                    }}
+                    style={style.profileConfirm}
                     onClick={() => window.location.href = '/profile'}
                 >Confirm</button>
             </div>}
             {show && <div
-                style={{
-                    position: 'fixed',
-                    zIndex: 500,
-                    top: 0,
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    margin: 'auto',
-                    height: '9rem',
-                    width: '80%',
-                    textAlign: 'center',
-                    padding: '2rem',
-                    border: '.25rem solid #2cff0f',
-                    borderRadius: '1rem',
-                    backgroundColor: 'black',
-                    color: '#2cff0f'
-                }}
+                style={style.saveModal}
             >Stop drawing and save path?<br />
                 <button
-                    style={{
-                        margin: '1rem 1rem 0 0',
-                        backgroundColor: '#3C29FF',
-                        color: 'whitesmoke',
-                        padding: '.5rem',
-                        border: '.25rem solid #2cff0f'
-                    }}
+                    style={style.saveConfirm}
                     onClick={handleSave}
                 >Save</button>
                 or
                 <button
-                    style={{
-                        margin: '1rem 0 0 1rem',
-                        backgroundColor: '#3C29FF',
-                        color: 'whitesmoke',
-                        padding: '.5rem',
-                        border: '.25rem solid #2cff0f'
-                    }}
+                    style={style.saveCancel}
                     onClick={e => setShow(false)}
                 >Keep Drawing</button>
             </div>}
